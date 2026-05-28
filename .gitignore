@@ -1,0 +1,25 @@
+# === UV & VIRTUAL ENVIRONMENTS ===
+# NEVER commit the actual virtual environment folder containing downloaded binaries
+.venv/
+venv/
+ENV/
+
+
+
+# === PYTHON COMPILED FILES ===
+# Byte-compiled / optimized / DLL files generated during execution
+__pycache__/
+*.py[cod]
+*$py.class
+
+# === OS & IDE SPECIFIC ===
+# JetBrains IDE settings (IntelliJ, PyCharm, etc.)
+.idea/
+# Ubuntu/Linux system artifacts
+.DS_Store
+.directory
+
+# === DEVOPS & ENVIRONMENT SECRETS ===
+# Local configuration files that contain private API keys or database passwords
+.env
+.env.local
