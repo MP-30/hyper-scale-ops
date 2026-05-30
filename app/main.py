@@ -8,7 +8,7 @@ app = FastAPI(
     title="Hyper-Scale-Ops-API",)
 
 
-app.include_router(students_router, prefix="/api", tags=["Students"])
+app.include_router(students_router, prefix="/api/v1", tags=["Students"])
 
 
 @app.get("/healthcheck/{name}")
