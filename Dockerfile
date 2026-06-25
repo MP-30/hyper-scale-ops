@@ -1,5 +1,5 @@
 FROM python:3.12-slim AS builder
-LABEL authors="aditya"
+LABEL authors="aditya bhadauriya"
 
 # Prevent Python from creating .pyc files
 ENV PYTHONDONTWRITEBYTECODE=1
