@@ -35,9 +35,9 @@ history:
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
-docker_build:
+
+docker_start:
 	docker build -t my-project-img:v1 .
-docker_run:
 	docker run -d --name my-project-cont --env-file .env -p 8000:8000 my-project-img:v1
 
 docker_clean:
