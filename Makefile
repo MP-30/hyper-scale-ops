@@ -8,6 +8,9 @@ help:
 	@echo "  make current                     Show current migration"
 	@echo "  make history                     Show migration history"
 	@echo "  make clean                       Remove cache files"
+	@echo "  make docker_clean                clean docker cont and img"
+	@echo "  make docker_start                Build img and run container"
+
 hello:
 	@echo "Hello Aditya! Your Makefile is working perfectly."
 
@@ -43,4 +46,4 @@ docker_start:
 docker_clean:
 	docker stop my-project-cont
 	docker rm my-project-cont
-	docker rmi my-project-img
+	docker rmi my-project-img:v1
