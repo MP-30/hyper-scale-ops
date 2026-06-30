@@ -20,20 +20,35 @@ install:
 run:
 	uv run uvicorn app.main:app --reload
 
+run-pytest:
+    ENV_FILE=.env.test uv run pytest
+
 migration:
 	uv run alembic revision --autogenerate -m "$(msg)"
 
 upgrade:
 	uv run alembic upgrade head
 
+upgrade-pytest:
+	ENV_FILE=.env.test uv run alembic upgrade head
+
 downgrade:
 	uv run alembic downgrade -1
+
+downgrade-pytest:
+	ENV_FILE=.env.test uv run alembic downgrade -1
 
 current:
 	uv run alembic current
 
+current-pytest:
+	ENV_FILE=.env.test uv run alembic current
+
 history:
 	uv run alembic history
+
+history-pytest:
+	ENV_FILE=.env.test uv run alembic history
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
