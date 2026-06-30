@@ -50,7 +50,8 @@ class StudentService:
     ):
         result = await db.execute(
             select(Student)
-            .where(Student.id==students_id)
+            .options(selectinload(Student.details))
+            .where(Student.id == students_id)
         )
 
         return result.scalar_one_or_none()
@@ -76,9 +77,11 @@ class StudentService:
             setattr(student, key, value)
 
         await db.commit()
-        await db.refresh(student, ["details"])
 
-        return  student
+        return await StudentService.get_student(
+            db,
+            student_id,
+        )
 
     @staticmethod
     async def delete_student(
