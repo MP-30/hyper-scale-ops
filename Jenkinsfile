@@ -16,9 +16,12 @@ pipeline {
                     if ! command -v uv &> /dev/null; then
                         echo "uv not found, installing..."
                         curl -LsSf https://astral.sh | sh
-                        export PATH="$HOME/.local/bin:$PATH"
+                        . $HOME/.local/bin/env
+                    else
+                        echo "uv is already installed"
                     fi
 
+                    uv --version
                     # Install dependencies and sync virtual environment instantly
                     uv sync
                     '''
