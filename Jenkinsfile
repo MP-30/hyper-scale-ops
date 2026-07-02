@@ -13,10 +13,10 @@ pipeline {
         stage('Environment Setup & Install') {
             steps {
                 sh '''
-                    if ! command -v uv &> /dev/null; then
+                    if ! command -v uv > /dev/null 2>&1; then
                         echo "uv not found, installing..."
-                        curl -LsSf https://astral.sh | sh
-                        . $HOME/.local/bin/env
+                        curl -LsSf https://astral.sh/uv/install.sh | sh
+                        export PATH="$HOME/.local/bin:$PATH"
                     else
                         echo "uv is already installed"
                     fi
@@ -34,7 +34,7 @@ pipeline {
         }
         stage('RUN Tests') {
             steps {
-                sh 'echo "Running faltu tests...'
+                sh 'echo "Running faltu tests..."'
             }
         }
         stage('Deploy') {
