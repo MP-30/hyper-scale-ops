@@ -34,3 +34,5 @@ async def debug_tables(db: AsyncSession = Depends(get_db)):
     result = await db.execute(query)
     tables = [row[0] for row in result.fetchall()]
     return {"tables_found_by_fastapi": tables}
+
+# just testing jenkins
