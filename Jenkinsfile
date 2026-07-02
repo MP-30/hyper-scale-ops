@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         UV_PROJECT_ENVIRONMENT = "${WORKSPACE}/.venv"
+        PATH = "${HOME}/.local/bin:${PATH}"
     }
     stages {
         stage('Checkout Code') {
@@ -40,6 +41,19 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'nohup uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 > app.log 2>&1 &'
+            }
+        }
+        stage('Debug') {
+            steps {
+                sh '''
+                    whoami
+                    echo "HOME=$HOME"
+                    pwd
+                    which uv || true
+                    echo "$PATH"
+                    ls -la $HOME/.local/bin || true
+                    ls -la /root/.local/bin || true
+                '''
             }
         }
     }
