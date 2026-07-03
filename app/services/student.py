@@ -1,7 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import  AsyncSession
-from app.models.students import Student, StudentDetails
-from app.schemas import students
+from app.models.students import Student as Student, StudentDetails as StudentDetails
 from app.schemas.students import StudentCreate, StudentUpdate
 from sqlalchemy.orm import selectinload
 

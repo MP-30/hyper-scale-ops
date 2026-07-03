@@ -1,1 +1,1 @@
-from app.models.students import Student, StudentDetails
+from app.models.students import Student as Student, StudentDetails as StudentDetails

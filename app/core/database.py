@@ -1,7 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from app.config import get_settings
-from app.core.models_base import Base
 
 settings = get_settings()
 # print("=" * 80)
