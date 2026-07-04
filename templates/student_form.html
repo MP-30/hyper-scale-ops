@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Student
+{% endblock %}
+
+{% block content %}
+
+<h1>Add Student</h1>
+
+<form id="student-form">
+
+    <p>
+        <label>Name</label><br>
+        <input type="text" id="name" required>
+    </p>
+
+    <p>
+        <label>Phone Number</label><br>
+        <input type="text" id="phone_number" required>
+    </p>
+
+    <p>
+        <label>Roll Number</label><br>
+        <input type="text" id="roll_number" required>
+    </p>
+
+    <p>
+        <label>Grade</label><br>
+        <input type="text" id="grade" required>
+    </p>
+
+    <hr>
+
+    <h3>Student Details</h3>
+
+    <p>
+        <label>Address Line 1</label><br>
+        <input type="text" id="address_line_1" required>
+    </p>
+
+    <p>
+        <label>Address Line 2</label><br>
+        <input type="text" id="address_line_2">
+    </p>
+
+    <p>
+        <label>State</label><br>
+        <input type="text" id="state" required>
+    </p>
+
+    <p>
+        <label>Father Name</label><br>
+        <input type="text" id="father_name" required>
+    </p>
+
+    <button type="submit">
+        Save Student
+    </button>
+
+</form>
+
+<script src="/static/js/app.js"></script>
+
+{% endblock %}

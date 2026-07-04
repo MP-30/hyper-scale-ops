@@ -3,11 +3,22 @@ from app.api.students import v1 as students_router
 from sqlalchemy.sql import text
 from app.core.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+from app.api.pages import pages_router
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 app = FastAPI(
-    title="Hyper-Scale-Ops-API",)
+    title="Hyper-Scale-Ops-API",
+)
 
+app.mount(
+    "/static",
+    StaticFiles(directory=BASE_DIR / "static"),
+    name="static",
+)
 
+app.include_router(pages_router)
 app.include_router(students_router, prefix="/api/v1", tags=["Students"])
 
 
