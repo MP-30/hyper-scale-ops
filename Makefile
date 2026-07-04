@@ -62,3 +62,4 @@ docker_clean:
 	docker stop my-project-cont
 	docker rm my-project-cont
 	docker rmi my-project-img:v1
+

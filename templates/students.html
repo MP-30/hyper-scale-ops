@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+Students
+{% endblock %}
+
+{% block content %}
+
+<h1>Student List</h1>
+
+<p>
+    <a href="/students/new">
+        ➕ Add New Student
+    </a>
+</p>
+
+<table id="students-table" border="1" cellpadding="10" cellspacing="0">
+
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Roll Number</th>
+            <th>Grade</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <!-- Student data will be loaded by JavaScript -->
+    </tbody>
+
+</table>
+
+<script src="/static/js/app.js"></script>
+
+{% endblock %}

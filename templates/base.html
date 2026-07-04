@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Hyper Scale Ops{% endblock %}</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+<header>
+
+    <h2>🎓 Student Management System</h2>
+
+    <nav>
+        <a href="/">Home</a> |
+        <a href="/students">Students</a> |
+        <a href="/students/new">Add Student</a>
+    </nav>
+
+    <hr>
+
+</header>
+
+<main>
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+</body>
+
+</html>
