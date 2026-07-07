@@ -63,3 +63,9 @@ docker_clean:
 	docker rm my-project-cont
 	docker rmi my-project-img:v1
 
+ruff-check:
+	ruff check .
+	ruff format . --check
+
+ruff-fix:
+	ruff check . --fix
