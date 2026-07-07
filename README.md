@@ -1,6 +1,6 @@
 # Hyper Scale Ops
 
-Hyper Scale Ops is a modern full-stack web application designed to demonstrate strong backend engineering, clean API design, and practical product thinking. The project showcases a student management system that combines a FastAPI-powered backend, database-driven business logic, and a simple user-facing interface suitable for internal tools or lightweight operational workflows.
+Hyper Scale Ops is a modern full-stack web application (I used jinja2 templates for frontend) designed to demonstrate strong backend engineering, clean API design, and practical product thinking. The project showcases a student management system that combines a FastAPI-powered backend, database-driven business logic, and a simple user-facing interface suitable for internal tools or lightweight operational workflows.
 
 This README is written with a recruiter and technical manager audience in mind, highlighting not just what the project does, but how it is built, how it scales in structure, and how it reflects professional software development practices.
 
@@ -27,13 +27,14 @@ The application supports:
 ## Technology Stack
 
 - Backend: FastAPI
-- Async ORM: SQLAlchemy 2
+- Async ORM: SQLAlchemy
 - Database: PostgreSQL
 - Migrations: Alembic
 - Templating: Jinja2
 - Validation: Pydantic
 - Testing: pytest
 - Packaging and execution: uv, Uvicorn
+- Linting: ruff
 
 ## Architecture Overview
 
