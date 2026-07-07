@@ -1,9 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        label 'dind-agent'
+    }
 
     environment {
-        UV_PROJECT_ENVIRONMENT = "${WORKSPACE}/.venv"
-        PATH = "${HOME}/.local/bin:${PATH}"
+        DOCKER_IMAGE = "mp30/hyper-ops:${BUILD_NUMBER}"
+        DOCKERHUB_CREDENTIAL = credentials('dockerid')
     }
     stages {
         stage('Checkout Code') {
@@ -11,26 +13,9 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/MP-30/hyper-scale-ops.git'
             }
         }
-        stage('Environment Setup & Install') {
+        stage('Build Docker Image') {
             steps {
-                sh '''
-                    if ! command -v uv > /dev/null 2>&1; then
-                        echo "uv not found, installing..."
-                        curl -LsSf https://astral.sh/uv/install.sh | sh
-                        export PATH="$HOME/.local/bin:$PATH"
-                    else
-                        echo "uv is already installed"
-                    fi
-
-                    uv --version
-                    # Install dependencies and sync virtual environment instantly
-                    uv sync
-                    '''
-            }
-        }
-        stage('Lint & Format Check') {
-            steps {
-                sh 'uv run ruff check app/'
+                sh 'docker build -t ${DOCKER_IMAGE} .'
             }
         }
         stage('RUN Tests') {
@@ -38,21 +23,25 @@ pipeline {
                 sh 'echo "Running faltu tests..."'
             }
         }
+        stage('Dockerhub login and push') {
+            steps {
+                sh '''
+                    echo ${DOCKERHUB_CREDENTIAL_PSW} | docker login -u ${DOCKERHUB_CREDENTIAL_USR} --password-stdin
+                    docker push ${DOCKER_IMAGE}
+                    docker logout
+                '''
+            }
+        }
+
         stage('Deploy') {
             steps {
-                sh 'nohup uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 > app.log 2>&1 &'
+                sh 'echo "Deploying..."'
             }
         }
         stage('Debug') {
             steps {
                 sh '''
-                    whoami
-                    echo "HOME=$HOME"
-                    pwd
-                    which uv || true
-                    echo "$PATH"
-                    ls -la $HOME/.local/bin || true
-                    ls -la /root/.local/bin || true
+                    echo "debuging..."
                 '''
             }
         }
