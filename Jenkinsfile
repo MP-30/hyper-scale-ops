@@ -14,16 +14,13 @@ pipeline {
             }
         }
 
-        stage('Unit Tests'){
+        stage('Unit Tests') {
             steps {
-                withCredentials([file(credentialsId: 'hyper-ops-test-env', variable: 'ENV_FILE')]) {
-                sh '''
-                cp $ENV_FILE .env.test
-
-                export $(grep -v '^#' .env.test | xargs)
-
-                pytest
-                '''
+                withCredentials([file(credentialsId: 'hyper-ops-test-env', variable: 'TEST_ENV_FILE')]) {
+                    sh '''
+                    cp "$TEST_ENV_FILE" .env.test
+                    make run-pytest
+                    '''
                 }
             }
         }
@@ -77,19 +74,22 @@ pipeline {
                  subject: 'Success: Jenkins Python Pipeline',
                  to: 'learningonly092@gmail.com'
 
-            slackSend tokenCredentialId: 'slack-link',
-                      color: '#00FF00', // Green bar
-                      message: "SUCCESS: FastAPI build and test succeeded on Jenkins! Job: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}] (${env.BUILD_URL})"
-
+            withCredentials([string(credentialsId: 'slack-link', variable: 'RAW_URL')]) {
+                slackSend token: "${env.RAW_URL}",
+                          color: '#00FF00',
+                          message: "SUCCESS: FastAPI build and test succeeded on Jenkins! Job: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}] (${env.BUILD_URL})"
+            }
         }
         failure {
             mail body: 'Jenkins Python Pipeline Failed! Please check the console logs.',
                  subject: 'ALARM: Jenkins Python Build Failed',
                  to: 'learningonly092@gmail.com'
 
-            slackSend tokenCredentialId: 'slack-link',
-                      color: '#FF0000', // Red bar
-                      message: "ALARM: Jenkins Python Build Failed! Check console logs. Job: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}] (${env.BUILD_URL})"
+            withCredentials([string(credentialsId: 'slack-link', variable: 'RAW_URL')]) {
+                slackSend token: "${env.RAW_URL}",
+                          color: '#FF0000',
+                          message: "ALARM: Jenkins Python Build Failed! Check console logs. Job: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}] (${env.BUILD_URL})"
+            }
         }
     }
 }
