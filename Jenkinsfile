@@ -33,14 +33,18 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy local') {
             steps {
-                sh """
-                    docker stop hyper-ops || true
-                    docker rm hyper-ops || true
+                withCredentials([file(credentialsId: 'hyper-ops-env', variable: 'ENV_FILE')]) {
+                sh '''
+                docker rm -f hyper-ops || true
 
-                    docker run -d --name hyper-ops -p 8000:8000 ${DOCKER_IMAGE}
-                """
+                docker run -d \
+                    --name hyper-ops \
+                    --env-file $ENV_FILE \
+                    -p 8000:8000 \
+                    ${DOCKER_IMAGE}
+                '''
             }
         }
         stage('Debug') {
