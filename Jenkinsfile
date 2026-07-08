@@ -74,10 +74,12 @@ pipeline {
                  subject: 'Success: Jenkins Python Pipeline',
                  to: 'learningonly092@gmail.com'
 
-            withCredentials([string(credentialsId: 'slack-link', variable: 'RAW_URL')]) {
-                slackSend token: "${env.RAW_URL}",
-                          color: '#00FF00',
-                          message: "SUCCESS: FastAPI build and test succeeded on Jenkins! Job: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}] (${env.BUILD_URL})"
+            withCredentials([string(credentialsId: 'slack-link', variable: 'SLACK_WEBHOOK')]) {
+                sh '''
+                curl -X POST -H 'Content-type: application/json' \
+                --data '{"text":"✅ SUCCESS: FastAPI build succeeded. Job: '"$JOB_NAME"' Build #'"$BUILD_NUMBER"'"}' \
+                "$SLACK_WEBHOOK"
+                '''
             }
         }
         failure {
@@ -85,10 +87,12 @@ pipeline {
                  subject: 'ALARM: Jenkins Python Build Failed',
                  to: 'learningonly092@gmail.com'
 
-            withCredentials([string(credentialsId: 'slack-link', variable: 'RAW_URL')]) {
-                slackSend token: "${env.RAW_URL}",
-                          color: '#FF0000',
-                          message: "ALARM: Jenkins Python Build Failed! Check console logs. Job: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}] (${env.BUILD_URL})"
+            withCredentials([string(credentialsId: 'slack-link', variable: 'SLACK_WEBHOOK')]) {
+                sh '''
+                curl -X POST -H 'Content-type: application/json' \
+                --data '{"text":"❌ FAILURE: FastAPI build failed. Job: '"$JOB_NAME"' Build #'"$BUILD_NUMBER"'"}' \
+                "$SLACK_WEBHOOK"
+                '''
             }
         }
     }
