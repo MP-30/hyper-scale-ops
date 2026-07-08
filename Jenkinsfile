@@ -8,29 +8,7 @@ pipeline {
         DOCKERHUB_CREDENTIAL = credentials('dockerid')
     }
     stages {
-        stage('Check Docker') {
-            steps {
-                sh '''
-                    echo "===== USER ====="
-                    whoami
-
-                    echo "===== PATH ====="
-                    echo $PATH
-
-                    echo "===== WHICH DOCKER ====="
-                    which docker || true
-
-                    echo "===== DOCKER VERSION ====="
-                    docker --version || true
-
-                    echo "===== DOCKER BINARY ====="
-                    ls -l /usr/bin/docker || true
-                    ls -l /usr/local/bin/docker || true
-                '''
-            }
-        }
-
-        stage('Checkout Code') {
+             stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/MP-30/hyper-scale-ops.git'
             }
