@@ -9,13 +9,6 @@ from app.core.database import (
     AsyncSessionLocal
 )
 
-# telling anyIO to use asyncio
-@pytest.fixture(scope="session")
-def anyio_backend():
-    return "asyncio"
-
-# database session.. one fresh SQLAlchemy session per test
-
 @pytest_asyncio.fixture()
 async def db_session() -> AsyncSession:
     async with AsyncSessionLocal() as session:
@@ -44,12 +37,11 @@ async def client(db_session: AsyncSession):
             app.dependency_overrides.clear()
 
 @pytest_asyncio.fixture(autouse=True)
-async def clean_database():
-    async with AsyncSessionLocal() as session:
+async def clean_database(db_session: AsyncSession):
         # Child table first
-        await session.execute(text("TRUNCATE TABLE student_details RESTART IDENTITY CASCADE;"))
+        await db_session.execute(text("TRUNCATE TABLE student_details RESTART IDENTITY CASCADE;"))
 
         # Parent table
-        await session.execute(text("TRUNCATE TABLE students RESTART IDENTITY CASCADE;"))
+        await db_session.execute(text("TRUNCATE TABLE students RESTART IDENTITY CASCADE;"))
 
-        await session.commit()
+        await db_session.commit()

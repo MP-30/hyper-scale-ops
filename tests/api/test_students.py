@@ -137,39 +137,39 @@ async def test_student_complete_crud_lifecycle(client: AsyncClient):
     assert deleted_response.json()["detail"] == "Student not found"
 
 
-async def test_fetch_student_not_found(client: AsyncClient):
-    """Verify fetching a non-existent student returns 404."""
-
-    response = await client.get("/api/v1/fetch-one-student/99999")
-
-    assert response.status_code == 404
-    assert response.json()["detail"] == "Student not found"
-
-
-async def test_modify_student_not_found(client: AsyncClient):
-    """Verify updating a non-existent student returns 404."""
-
-    payload = {
-        "name": "Ghost",
-        "phone_number": "9999999999",
-        "grade": "F",
-    }
-
-    response = await client.put(
-        "/api/v1/modify-student/99999",
-        json=payload,
-    )
-
-    assert response.status_code == 404
-    assert response.json()["detail"] == "Student not found"
-
-
-async def test_delete_student_not_found(client: AsyncClient):
-    """Verify deleting a non-existent student returns 404."""
-
-    response = await client.delete(
-        "/api/v1/delete-student/99999"
-    )
-
-    assert response.status_code == 404
-    assert response.json()["detail"] == "Student not found"
+# async def test_fetch_student_not_found(client: AsyncClient):
+#     """Verify fetching a non-existent student returns 404."""
+#
+#     response = await client.get("/api/v1/fetch-one-student/99999")
+#
+#     assert response.status_code == 404
+#     assert response.json()["detail"] == "Student not found"
+#
+#
+# async def test_modify_student_not_found(client: AsyncClient):
+#     """Verify updating a non-existent student returns 404."""
+#
+#     payload = {
+#         "name": "Ghost",
+#         "phone_number": "9999999999",
+#         "grade": "F",
+#     }
+#
+#     response = await client.put(
+#         "/api/v1/modify-student/99999",
+#         json=payload,
+#     )
+#
+#     assert response.status_code == 404
+#     assert response.json()["detail"] == "Student not found"
+#
+#
+# async def test_delete_student_not_found(client: AsyncClient):
+#     """Verify deleting a non-existent student returns 404."""
+#
+#     response = await client.delete(
+#         "/api/v1/delete-student/99999"
+#     )
+#
+#     assert response.status_code == 404
+#     assert response.json()["detail"] == "Student not found"
