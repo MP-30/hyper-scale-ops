@@ -21,7 +21,7 @@ run:
 	uv run uvicorn app.main:app --reload
 
 run-pytest:
-    ENV_FILE=.env.test uv run pytest
+	ENV_FILE=.env.test uv run pytest
 
 migration:
 	uv run alembic revision --autogenerate -m "$(msg)"
