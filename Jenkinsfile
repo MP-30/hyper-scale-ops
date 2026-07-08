@@ -35,7 +35,12 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying..."'
+                sh """
+                    docker stop hyper-ops || true
+                    docker rm hyper-ops || true
+
+                    docker run -d --name hyper-ops -p 8000:8000 ${DOCKER_IMAGE}
+                """
             }
         }
         stage('Debug') {
