@@ -13,6 +13,21 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/MP-30/hyper-scale-ops.git'
             }
         }
+
+        stage('Unit Tests'){
+            steps {
+                withCredentials([file(credentialsId: 'hyper-ops-test-env', variable: 'ENV_FILE')]) {
+                sh '''
+                cp $ENV_FILE .env.test
+
+                export $(grep -v '^#' .env.test | xargs)
+
+                pytest
+                '''
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${DOCKER_IMAGE} ."
@@ -61,11 +76,23 @@ pipeline {
             mail body: 'FastAPI build and test succeeded on Jenkins!',
                  subject: 'Success: Jenkins Python Pipeline',
                  to: 'learningonly092@gmail.com'
+
+            withCredentials([string(credentialsId: 'slack-link', variable: 'SLACK_URL')]) {
+                slackSend webhookUrl: "${env.SLACK_URL}",
+                          color: '#00FF00', // Green bar
+                          message: "SUCCESS: FastAPI build and test succeeded on Jenkins! Job: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}] (${env.BUILD_URL})"
+            }
         }
         failure {
             mail body: 'Jenkins Python Pipeline Failed! Please check the console logs.',
                  subject: 'ALARM: Jenkins Python Build Failed',
                  to: 'learningonly092@gmail.com'
+
+            withCredentials([string(credentialsId: 'slack-link', variable: 'SLACK_URL')]) {
+                slackSend webhookUrl: "${env.SLACK_URL}",
+                          color: '#FF0000', // Red bar
+                          message: "ALARM: Jenkins Python Build Failed! Check console logs. Job: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}] (${env.BUILD_URL})"
+            }
         }
     }
 }
