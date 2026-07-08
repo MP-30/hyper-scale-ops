@@ -45,17 +45,18 @@ pipeline {
             }
         }
 
-        stage('Heroku Login Test') {
+        stage('Deploy local') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY'),
-                    string(credentialsId: 'heroku-email', variable: 'HEROKU_EMAIL')
-                ]) {
-                    sh '''
-                    export HEROKU_API_KEY=$HEROKU_API_KEY
+                withCredentials([file(credentialsId: 'hyper-ops-env', variable: 'ENV_FILE')]) {
+                sh """
+                docker rm -f hyper-ops || true
 
-                    heroku auth:whoami
-                    '''
+                docker run -d \
+                    --name hyper-ops \
+                    --env-file $ENV_FILE \
+                    -p 8000:8000 \
+                    ${DOCKER_IMAGE}
+                """
                 }
             }
         }
