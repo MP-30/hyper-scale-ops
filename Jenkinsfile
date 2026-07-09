@@ -63,7 +63,7 @@ pipeline {
                     heroku auth:whoami
                     heroku apps
                     heroku ps --app hyper-scale-ops-dev
-                    heroku stack:set container --app hyper-scale-ops-dev
+
                     '''
                 }
             }
@@ -88,7 +88,7 @@ pipeline {
                             registry.heroku.com/hyper-scale-ops-dev/web
 
                         echo "Pushing image to Heroku..."
-                        docker push registry.heroku.com/hyper-scale-ops-dev/web
+                        heroku container:push web --app hyper-scale-ops-dev
 
                         echo "Releasing image..."
                         heroku container:release web --app hyper-scale-ops-dev
