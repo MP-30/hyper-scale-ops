@@ -27,7 +27,12 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE} ."
+                sh """
+                    docker buildx build \
+                      --platform linux/amd64 \
+                      --load \
+                      -t ${DOCKER_IMAGE} .
+                """
             }
         }
         stage('RUN Tests') {
