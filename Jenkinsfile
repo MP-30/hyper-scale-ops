@@ -27,10 +27,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh """
-                    DOCKER_BUILDKIT=0 docker build \
-                         -t ${DOCKER_IMAGE} .
-                """
+                sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
         stage('RUN Tests') {
@@ -67,30 +64,26 @@ pipeline {
         stage('Deploy to Heroku') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY'),
-                    string(credentialsId: 'heroku-email', variable: 'HEROKU_EMAIL')
+                    string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY')
                 ]) {
-                    sh """
-                        set -e
+                    sh '''
+                    set -e
 
-                        export HEROKU_API_KEY=$HEROKU_API_KEY
+                    export HEROKU_API_KEY=$HEROKU_API_KEY
 
-                        echo "Logging into Heroku..."
-                        heroku container:login
+                    echo "Configuring Git..."
+                    git config user.name "Jenkins"
+                    git config user.email "jenkins@localhost"
 
-                        echo "Tagging image..."
-                        docker tag \
-                            ${DOCKER_IMAGE} \
-                            registry.heroku.com/hyper-scale-ops-dev/web
+                    echo "Adding Heroku remote..."
+                    git remote remove heroku || true
+                    heroku git:remote --app hyper-scale-ops-dev
 
-                        echo "Pushing image to Heroku..."
-                        heroku container:push web --app hyper-scale-ops-dev
+                    git remote -v
 
-                        echo "Releasing image..."
-                        heroku container:release web --app hyper-scale-ops-dev
-
-                        echo "Deployment completed."
-                    """
+                    echo "Deploying to Heroku..."
+                    git push heroku main:main --force
+                    '''
                 }
             }
         }
