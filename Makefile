@@ -69,3 +69,6 @@ ruff-check:
 
 ruff-fix:
 	ruff check . --fix
+
+requi-for-heruko:
+	uv export --format requirements-txt --no-dev > requirements.txt
