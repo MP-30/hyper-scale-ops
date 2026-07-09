@@ -45,27 +45,18 @@ pipeline {
             }
         }
 
-        stage('Heroku Login Test') {
+        stage('Heroku Verification') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY'),
-                    string(credentialsId: 'heroku-email', variable: 'HEROKU_EMAIL')
+                    string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY')
                 ]) {
                     sh '''
                     export HEROKU_API_KEY=$HEROKU_API_KEY
+
                     heroku auth:whoami
                     heroku apps
                     heroku ps --app hyper-scale-ops-dev
-
-                    heroku stack
-
-                    heroku stack:set heroku-24 --app hyper-scale-ops-dev
-
-                    heroku buildpacks:set heroku/python \
-                        --app hyper-scale-ops-dev
-
                     heroku buildpacks --app hyper-scale-ops-dev
-
                     '''
                 }
             }
