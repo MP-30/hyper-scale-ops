@@ -29,9 +29,11 @@ pipeline {
             steps {
                 sh """
                     docker buildx build \
-                      --platform linux/amd64 \
-                      --load \
-                      -t ${DOCKER_IMAGE} .
+                    --platform linux/amd64 \
+                    --provenance=false \
+                    --sbom=false \
+                    --load \
+                    -t ${DOCKER_IMAGE} .
                 """
             }
         }
