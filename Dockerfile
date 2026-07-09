@@ -35,11 +35,12 @@ COPY . .
 
 EXPOSE 8000
 
-# Fix ownership of copied files so appuser can read them
+COPY herokuStart.sh /app/herokuStart.sh
+
+RUN chmod +x /app/herokuStart.sh
+
 RUN chown -R appuser:appuser /app
 
 USER appuser
 
-# FIX: Run uvicorn directly since it is now in my PATH
-ENTRYPOINT ["uvicorn", "app.main:app"]
-CMD ["--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["/app/herokuStart.sh"]
