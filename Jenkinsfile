@@ -57,6 +57,15 @@ pipeline {
                     heroku apps
                     heroku ps --app hyper-scale-ops-dev
 
+                    heroku stack
+
+                    heroku stack:set heroku-24 --app hyper-scale-ops-dev
+
+                    heroku buildpacks:set heroku/python \
+                        --app hyper-scale-ops-dev
+
+                    heroku buildpacks --app hyper-scale-ops-dev
+
                     '''
                 }
             }
