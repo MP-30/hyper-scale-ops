@@ -53,21 +53,50 @@ pipeline {
                 ]) {
                     sh '''
                     export HEROKU_API_KEY=$HEROKU_API_KEY
-
                     heroku auth:whoami
-
                     heroku apps
-
                     heroku ps --app hyper-scale-ops-dev
+                    heroku stack:set container --app hyper-scale-ops-dev
                     '''
+                }
+            }
+        }
+        stage('Deploy to Heroku') {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY'),
+                    string(credentialsId: 'heroku-email', variable: 'HEROKU_EMAIL')
+                ]) {
+                    sh """
+                        set -e
+
+                        export HEROKU_API_KEY=$HEROKU_API_KEY
+
+                        echo "Logging into Heroku..."
+                        heroku container:login
+
+                        echo "Tagging image..."
+                        docker tag \
+                            ${DOCKER_IMAGE} \
+                            registry.heroku.com/hyper-scale-ops-dev/web
+
+                        echo "Pushing image to Heroku..."
+                        docker push registry.heroku.com/hyper-scale-ops-dev/web
+
+                        echo "Releasing image..."
+                        heroku container:release web --app hyper-scale-ops-dev
+
+                        echo "Deployment completed."
+                    """
                 }
             }
         }
         stage('Debug') {
             steps {
-                sh '''
-                    echo "debuging..."
-                '''
+                sh """
+                    heroku ps --app hyper-scale-ops-dev
+                    heroku logs --tail --app hyper-scale-ops-dev
+                """
             }
         }
     }
