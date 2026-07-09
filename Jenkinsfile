@@ -55,6 +55,10 @@ pipeline {
                     export HEROKU_API_KEY=$HEROKU_API_KEY
 
                     heroku auth:whoami
+
+                    heroku apps
+
+                    heroku ps --app hyper-scale-ops-dev
                     '''
                 }
             }
