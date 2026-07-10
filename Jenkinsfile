@@ -88,7 +88,7 @@ pipeline {
             }
         }
         stage('Debug') {
-             steps {
+            steps {
                 withCredentials([
                     string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY')
                 ]) {
