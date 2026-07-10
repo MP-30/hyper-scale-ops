@@ -88,12 +88,16 @@ pipeline {
             }
         }
         stage('Debug') {
-            steps {
-                sh """
+             steps {
+                withCredentials([
+                    string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY')
+                ]) {
+                    sh '''
+                    export HEROKU_API_KEY=$HEROKU_API_KEY
+
                     heroku ps --app hyper-scale-ops-dev
-                    heroku logs --tail --app hyper-scale-ops-dev
-                """
-            }
+                    '''
+                }
         }
     }
     post {
