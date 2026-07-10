@@ -98,6 +98,7 @@ pipeline {
                     heroku ps --app hyper-scale-ops-dev
                     '''
                 }
+            }
         }
     }
     post {
