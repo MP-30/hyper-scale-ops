@@ -1,13 +1,20 @@
+import os
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
-from sqlalchemy.ext.asyncio import  AsyncSession
-from app.main import app
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
+
+# Ensure pytest uses the test environment unless another ENV_FILE is already set.
+os.environ.setdefault("ENV_FILE", ".env.test")
+
+from app.main import app
 from app.core.database import (
     get_db,
     AsyncSessionLocal
 )
+
+# fastapi test client and override get_db() dependency
 
 @pytest_asyncio.fixture()
 async def db_session() -> AsyncSession:
@@ -17,13 +24,12 @@ async def db_session() -> AsyncSession:
         finally:
             await session.close()
 
-# fastapi test client and override get_db() dependency
-
 @pytest_asyncio.fixture
-async def client(db_session: AsyncSession):
+async def client():
 
     async def override_get_db():
-        yield db_session
+        async with AsyncSessionLocal() as session:
+            yield session
 
     app.dependency_overrides[get_db] = override_get_db
 
@@ -37,11 +43,8 @@ async def client(db_session: AsyncSession):
             app.dependency_overrides.clear()
 
 @pytest_asyncio.fixture(autouse=True)
-async def clean_database(db_session: AsyncSession):
-        # Child table first
-        await db_session.execute(text("TRUNCATE TABLE student_details RESTART IDENTITY CASCADE;"))
-
-        # Parent table
-        await db_session.execute(text("TRUNCATE TABLE students RESTART IDENTITY CASCADE;"))
-
-        await db_session.commit()
+async def clean_database() -> None:
+    async with AsyncSessionLocal() as session:
+        await session.execute(text("TRUNCATE TABLE student_details RESTART IDENTITY CASCADE;"))
+        await session.execute(text("TRUNCATE TABLE students RESTART IDENTITY CASCADE;"))
+        await session.commit()
