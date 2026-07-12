@@ -2,12 +2,12 @@
 
 <p align="center">
 
-<a href="https://hyper-scale-ops-dev-218cc42920d8.herokuapp.com/">
+<a href="https://dev.adityalive.tech/">
     <img src="https://img.shields.io/badge/🚀-Live%20Application-430098?style=for-the-badge" />
 </a>
 
 <a href="https://p.us5.datadoghq.com/sb/8e9bd3b1-7001-11f1-aae3-c2753782a27a-994485ddc16ff7de20d382368a9bf932">
-    <img src="https://img.shields.io/badge/📈-Datadog%20Dashboard-632CA6?style=for-the-badge&logo=datadog&logoColor=white" />
+    <img src="https://img.shields.io/badge/📈-Live%20Datadog%20Dashboard-632CA6?style=for-the-badge&logo=datadog&logoColor=white" />
 </a>
 
 </p>
@@ -21,6 +21,234 @@
 Hyper Scale Ops is a modern full-stack web application (I used jinja2 templates for frontend) designed to demonstrate strong backend engineering, clean API design, and practical product thinking. The project showcases a student management system that combines a FastAPI-powered backend, database-driven business logic, and a simple user-facing interface suitable for internal tools or lightweight operational workflows.
 
 This README is written with a recruiter and technical manager audience in mind, highlighting not just what the project does, but how it is built, how it scales in structure, and how it reflects professional software development practices.
+
+## Current Architecture
+
+```mermaid
+---
+config:
+  fontFamily: Verdana, Geneva, sans-serif
+  theme: neo-dark
+  look: handDrawn
+---
+%%{init: {
+    "theme":"base",
+    "themeVariables":{
+        "fontSize":"38px"
+    },
+    "flowchart": {
+        "rankSpacing": 330,
+        "nodeSpacing": 50
+    },
+    "themeCSS": ".pyBlock polygon, [class*='pyBlock'] rect { fill: #FFD43B !important; background-color: #FFD43B !important; stroke: #306998 !important; stroke-width: 4px !important; color: #306998 !important; }"
+}}%%
+flowchart LR
+subgraph DEV["🟩 DEVELOPER WORKSTATION"]
+PY[Python]:::pyBlock
+UV[uv]
+PC[PyCharm Pro]
+PM[Postman]
+GIT[Git]
+end
+
+subgraph SCM["🟩 SOURCE CONTROL"]
+GH[GitHub]
+end
+
+subgraph CI["🟩 JENKINS CI/CD"]
+J[Jenkins]
+R[Ruff]
+T[Pytest]
+B[Build Docker Image]
+DH[Push Docker Image]
+N1[Slack Notification]
+N2[Email Notification]
+end
+
+subgraph REG["🟩 CONTAINER REGISTRY"]
+HUB[Docker Hub]
+end
+
+subgraph CLOUD["🟩 HEROKU"]
+HEROKU[Heroku]
+DOMAIN[dev.adityalive.tech]
+SSL[SSL HTTPS]
+end
+
+subgraph APP["🟩 FASTAPI APPLICATION"]
+API[FastAPI]
+ASYNC[Async]
+PYD[Pydantic]
+SQLA[SQLAlchemy Async]
+ALE[Alembic]
+JINJA[Jinja2]
+end
+
+subgraph DB["🟩 ORACLE CLOUD POSTGRESQL"]
+DEV1[dev1]
+DEV2[dev2]
+TEST[test]
+PYTESTDB[pytest]
+PROD[prod]
+end
+
+subgraph OBS["🟩 OBSERVABILITY"]
+DD[Datadog]
+end
+
+PY-->UV-->API
+PC-->API
+PM-->API
+GIT-->GH-->J
+J-->R-->T-->B-->DH-->HUB
+HUB-->HEROKU
+HEROKU-->DOMAIN-->SSL
+API-->ASYNC
+API-->PYD
+API-->SQLA
+API-->ALE
+API-->JINJA
+SQLA-->DEV1
+SQLA-->DEV2
+SQLA-->TEST
+SQLA-->PYTESTDB
+SQLA-->PROD
+API-->DD
+T-->N1
+T-->N2
+
+```
+
+
+## CI/CD pipeline
+
+```mermaid
+---
+config:
+  theme: neo-dark
+  fontFamily: Verdana, Geneva, sans-serif
+  look: handDrawn
+---
+flowchart LR
+DEV[Developer]-->GH[GitHub]
+GH-->J[Jenkins]
+J-->L[Ruff]
+L-->P[Pytest]
+P-->D[Build Docker Image]
+D-->H[Push to Docker Hub]
+H-->HEROKU[Deploy to Heroku]
+HEROKU-->LIVE[dev.adityalive.tech]
+J-->S[Slack Notification]
+J-->E[Email Notification]
+
+
+```
+
+## Technology Stack & Implementation Roadmap
+
+> **Legend:** 🟢 Completed · ⚪ Upcoming
+```mermaid
+%%{init:{
+"theme":"dark",
+"themeVariables":{
+"fontSize":"18px",
+"lineColor":"#9CA3AF"
+},
+"themeCSS":"
+
+g.mindmap-node.depth-0 circle{
+fill:#374151!important;
+stroke:#9CA3AF!important;
+stroke-width:3px!important;
+}
+
+g.mindmap-node.section-0 .mindmap-node-rect{
+fill:#22C55E!important;
+stroke:#15803D!important;
+}
+
+g.mindmap-node.section-1 .mindmap-node-rect{
+fill:#F59E0B!important;
+stroke:#D97706!important;
+}
+
+g.mindmap-node.section-2 .mindmap-node-rect{
+fill:#3B82F6!important;
+stroke:#2563EB!important;
+}
+
+.mindmap-node text{
+fill:white!important;
+font-size:18px!important;
+font-weight:bold!important;
+}
+
+path.mindmap-edge{
+stroke:#9CA3AF!important;
+stroke-width:4px!important;
+}
+
+"
+}}%%
+
+mindmap
+  root((Hyper Scale Ops))
+
+    Backend
+      🟢 FastAPI
+      🟢 Async / Await
+      🟢 SQLAlchemy
+      🟢 Alembic
+      🟢 Pydantic
+      🟢 Jinja2
+      🟢 PostgreSQL
+
+    Containers
+      🟢 Docker
+      🟢 Docker Hub
+      🟢 Multi-stage Builds
+      🟢 Image Optimization
+
+    Database
+      Oracle Cloud PostgreSQL
+        🟢 dev
+        🟢 test
+        🟢 pytest
+        🟢 prod
+
+
+    CI/CD
+      🟢 Jenkins
+      ⚪ GitHub Actions
+      🟢 Ruff
+      🟢 Multi-stage Pipelines
+      🟢 Email Notifications
+      🟢 Slack Notifications
+      ⚪ Trivy
+      ⚪ Sentry
+      🟢 Pytest
+      ⚪ BrowserStack
+
+
+    Observability
+      ⚪ OpenTelemetry
+      🟢 Datadog
+      ⚪ Prometheus
+      ⚪ Grafana
+      ⚪ New Relic
+
+    Kubernetes
+      ⚪ MicroK8s
+      ⚪ Helm
+      ⚪ NGINX Ingress
+
+    Cloud
+      🟢 Domain
+      🟢 SSL
+      🟢 Heroku
+      ⚪ AWS
+      ⚪ DigitalOcean
+```
 
 ## Why This Project Matters
 
