@@ -1,6 +1,4 @@
-import asyncio
 import os
-import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -45,7 +43,7 @@ async def client():
 
 @pytest_asyncio.fixture(autouse=True)
 async def clean_database() -> None:
-    print("clean_database event_loop", id(asyncio.get_running_loop()))
+    # print("clean_database event_loop", id(asyncio.get_running_loop()))
     async with AsyncSessionLocal() as session:
         await session.execute(text("TRUNCATE TABLE student_details RESTART IDENTITY CASCADE;"))
         await session.execute(text("TRUNCATE TABLE students RESTART IDENTITY CASCADE;"))
