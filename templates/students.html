@@ -6,33 +6,59 @@ Students
 
 {% block content %}
 
-<h1>Student List</h1>
+<div class="card">
 
-<p>
-    <a href="/students/new">
-        ➕ Add New Student
-    </a>
+<h2>📚 Students</h2>
+
+<p class="text-muted">
+List of registered students.
 </p>
 
-<table id="students-table" border="1" cellpadding="10" cellspacing="0">
+<table class="table">
 
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Phone Number</th>
-            <th>Roll Number</th>
-            <th>Grade</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Roll No.</th>
+    <th>Grade</th>
+    <th>Phone</th>
+    <th>Action</th>
+</tr>
+</thead>
 
-    <tbody>
-        <!-- Student data will be loaded by JavaScript -->
-    </tbody>
+<tbody>
+
+{% for student in students %}
+
+<tr>
+
+<td>{{ student.name }}</td>
+
+<td>{{ student.roll_number }}</td>
+
+<td>{{ student.grade }}</td>
+
+<td>{{ student.phone_number }}</td>
+
+<td>
+
+<a class="btn-small"
+href="/students/{{ student.id }}">
+
+View
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
 
 </table>
 
-<script src="/static/js/app.js"></script>
+</div>
 
 {% endblock %}

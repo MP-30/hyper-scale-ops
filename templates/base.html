@@ -1,36 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Hyper Scale Ops{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}{% endblock %} | Hyper Scale Ops
+    </title>
 
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
 <body>
 
-<header>
+<header class="header">
+    <div class="container">
+        <h1>🚀 Hyper Scale Ops</h1>
+        <p class="subtitle">
+            Student Management System
+        </p>
 
-    <h2>🎓 Student Management System</h2>
-
-    <nav>
-        <a href="/">Home</a> |
-        <a href="/students">Students</a> |
-        <a href="/students/new">Add Student</a>
-    </nav>
-
-    <hr>
-
+        <nav>
+            <a href="/">🏠 Home</a>
+            <a href="/students">📚 Students</a>
+            <a href="/students/new">➕ Add Student</a>
+        </nav>
+    </div>
 </header>
 
-<main>
+<main class="container">
+<div class="info-box">
 
-    {% block content %}
-    {% endblock %}
+ℹ️ <strong>Demo Notice</strong>
+
+<p>
+This application uses a PostgreSQL database hosted on an Oracle Cloud Free Tier (1 GB VM) in USA. Because the backend communicates with a remote server, requests may occasionally take a few seconds to complete. This deployment reflects a real cloud-based architecture rather than a local database.
+</p>
+
+</div>
+{% block content %}
+{% endblock %}
 
 </main>
 
-</body>
+<footer>
+    <div class="container">
+        <p>
+            Built with FastAPI • PostgreSQL • SQLAlchemy • Jinja2
+        </p>
+    </div>
+</footer>
 
+</body>
 </html>
