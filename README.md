@@ -1,3 +1,21 @@
+## 📊 Live Links
+
+<p align="center">
+
+<a href="https://hyper-scale-ops-dev-218cc42920d8.herokuapp.com/">
+    <img src="https://img.shields.io/badge/🚀-Live%20Application-430098?style=for-the-badge" />
+</a>
+
+<a href="https://p.us5.datadoghq.com/sb/8e9bd3b1-7001-11f1-aae3-c2753782a27a-994485ddc16ff7de20d382368a9bf932">
+    <img src="https://img.shields.io/badge/📈-Datadog%20Dashboard-632CA6?style=for-the-badge&logo=datadog&logoColor=white" />
+</a>
+
+</p>
+
+<p align="center">
+<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=4&color=0:334155,100:475569"/>
+</p>
+
 # Hyper Scale Ops
 
 Hyper Scale Ops is a modern full-stack web application (I used jinja2 templates for frontend) designed to demonstrate strong backend engineering, clean API design, and practical product thinking. The project showcases a student management system that combines a FastAPI-powered backend, database-driven business logic, and a simple user-facing interface suitable for internal tools or lightweight operational workflows.
