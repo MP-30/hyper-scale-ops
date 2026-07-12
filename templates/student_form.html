@@ -6,60 +6,65 @@ Add Student
 
 {% block content %}
 
-<h1>Add Student</h1>
+<div class="card">
 
-<form id="student-form">
-
-    <p>
-        <label>Name</label><br>
-        <input type="text" id="name" required>
+    <h2>➕ Add New Student</h2>
+    <p class="text-muted">
+        Fill in the details below to register a new student.
     </p>
 
-    <p>
-        <label>Phone Number</label><br>
-        <input type="text" id="phone_number" required>
-    </p>
+    <form method="POST">
 
-    <p>
-        <label>Roll Number</label><br>
-        <input type="text" id="roll_number" required>
-    </p>
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
 
-    <p>
-        <label>Grade</label><br>
-        <input type="text" id="grade" required>
-    </p>
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="phone_number" name="phone_number" required>
+        </div>
 
-    <hr>
+        <div class="form-group">
+            <label>Roll Number</label>
+            <input type="text" id="roll_number" name="roll_number" required>
+        </div>
 
-    <h3>Student Details</h3>
+        <div class="form-group">
+            <label>Grade</label>
+            <input type="text" id="grade" name="grade" required>
+        </div>
 
-    <p>
-        <label>Address Line 1</label><br>
-        <input type="text" id="address_line_1" required>
-    </p>
+        <hr>
 
-    <p>
-        <label>Address Line 2</label><br>
-        <input type="text" id="address_line_2">
-    </p>
+        <h3>🏠 Student Details</h3>
 
-    <p>
-        <label>State</label><br>
-        <input type="text" id="state" required>
-    </p>
+        <div class="form-group">
+            <label>Address Line 1</label>
+            <input type="text" id="address_line_1" name="address_line_1" required>
+        </div>
 
-    <p>
-        <label>Father Name</label><br>
-        <input type="text" id="father_name" required>
-    </p>
+        <div class="form-group">
+            <label>Address Line 2</label>
+            <input type="text" id="address_line_2" name="address_line_2">
+        </div>
 
-    <button type="submit">
-        Save Student
-    </button>
+        <div class="form-group">
+            <label>State</label>
+            <input type="text" id="state" name="state" required>
+        </div>
 
-</form>
+        <div class="form-group">
+            <label>Father Name</label>
+            <input type="text" id="father_name" name="father_name" required>
+        </div>
 
-<script src="/static/js/app.js"></script>
+        <button class="btn">
+            Save Student
+        </button>
+
+    </form>
+
+</div>
 
 {% endblock %}
