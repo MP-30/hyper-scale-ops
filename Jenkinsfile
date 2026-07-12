@@ -14,6 +14,14 @@ pipeline {
             }
         }
 
+        stage('RUFF CHECK') {
+            steps {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh 'make ruff-check'
+                    }
+            }
+        }
+
         stage('Unit Tests') {
             steps {
                 withCredentials([file(credentialsId: 'hyper-ops-test-env', variable: 'TEST_ENV_FILE')]) {
