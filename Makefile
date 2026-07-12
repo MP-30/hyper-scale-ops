@@ -64,7 +64,7 @@ docker_clean:
 	docker rmi my-project-img:v1
 
 ruff-check:
-	ruff check .
+	uv run ruff check .
 	ruff format . --check
 
 ruff-fix:
