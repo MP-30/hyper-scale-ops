@@ -219,7 +219,7 @@ mindmap
 
     CI/CD
       🟢 Jenkins
-      ⚪ GitHub Actions
+      🟢 GitHub Actions
       🟢 Ruff
       🟢 Multi-stage Pipelines
       🟢 Email Notifications
