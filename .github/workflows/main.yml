@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Pytest
         run: | 
-          make run-python
+          make run-pytest
     # Docker login
       - name: Login to dockerhub
         uses: docker/login-action@v3
