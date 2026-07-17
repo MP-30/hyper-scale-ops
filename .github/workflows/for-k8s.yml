@@ -71,6 +71,29 @@ jobs:
         run: | 
           docker push $DOCKER_IMAGE
 
+    # Updating value in my helm repo
+      - name: Update Helm values
+        run: |
+
+          git clone https://${{ secrets.K8S_REPO_TOKEN }}@github.com/MP-30/hyper-scale-ops-k8s.git
+
+          cd hyper-scale-ops-k8s
+
+          sed -i \
+          "s/tag:.*/tag: \"${{ github.run_number }}\"/" \
+          environments/dev/values.yaml
+
+
+          git config user.name "github-actions"
+
+          git config user.email "github-actions@github.com"
+
+
+          git add environments/dev/values.yaml
+
+          git commit -m "Update image tag to ${{ github.run_number }}"
+
+          git push
 
 
   # Success Email
