@@ -96,7 +96,7 @@ jobs:
             
             heroku git:remote --app hyper-scale-ops-dev
             
-            git push heroku main:main --force
+            git push heroku HEAD:main --force
 
   # Debugging
       - name: Heroku Debug
