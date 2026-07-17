@@ -121,7 +121,7 @@ jobs:
           secure: true
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: ALARM - GitHub Actions For-k8s Pipeline Failed
+          subject: ALARM - GitHub Actions For-k8s Pipeline Failed.
           to: learningonly092@gmail.com
           from: GitHub Actions
           body: FastAPI pipeline For-k8s Pipeline failed. Please check GitHub Actions logs.
