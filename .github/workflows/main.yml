@@ -2,7 +2,7 @@ name: python application CI/CD
 on:
   push:
     branches:
-      - main
+      - dev-deploy
 #  pull_request:
 #    branches:
 #      - main
