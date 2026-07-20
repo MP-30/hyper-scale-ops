@@ -238,16 +238,16 @@ mindmap
       ⚪ New Relic
 
     Kubernetes
-      ⚪ MicroK8s
-      ⚪ Helm
-      ⚪ NGINX Ingress
+      🟢 MicroK8s
+      🟢 Helm
+      🟢 NGINX Ingress
 
     Cloud
       🟢 Domain
       🟢 SSL
       🟢 Heroku
       ⚪ AWS
-      ⚪ DigitalOcean
+      🟢 DigitalOcean
 ```
 
 ## Why This Project Matters
