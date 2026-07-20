@@ -1,0 +1,31 @@
+<!-- app/templates/classes.html -->
+{% extends "base.html" %}
+{% block title %}Classes{% endblock %}
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>🏫 Academic Classes</h2>
+        <a href="/classes/new" class="btn-small">➕ Add Class</a>
+    </div>
+    <table class="table" style="margin-top: 15px;">
+        <thead>
+            <tr>
+                <th>Class Name</th>
+                <th>Academic Level</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in classes %}
+            <tr>
+                <td><strong>{{ c.name }}</strong></td>
+                <td>Level {{ c.level }}</td>
+                <td><a class="btn-small" href="/classes/{{ c.id }}">View Rooms</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" class="text-center text-muted">No classes cataloged yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

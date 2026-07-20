@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Schedule Period{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📅 Schedule Calendar Window</h2>
+    <p class="text-muted">Book a time slot matrix for a teacher and a class room.</p>
+    <div id="message-box" style="display: none; padding: 12px; margin-bottom: 20px; border-radius: 4px; font-weight: bold;"></div>
+
+    <form id="period-form">
+        <div class="form-group">
+            <label for="day">Day of the Week</label>
+            <select id="day" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+            </select>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px; display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <label for="start_time">Start Time</label>
+                <input type="time" id="start_time" required style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+            <div style="flex: 1;">
+                <label for="end_time">End Time</label>
+                <input type="time" id="end_time" required style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px;">
+            <label for="class_id">Target Class Room</label>
+            <select id="class_id" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <option value="">-- Choose Class --</option>
+                {% for c in classes %}
+                    <option value="{{ c.id }}">{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px;">
+            <label for="teacher_id">Assigned Faculty Instructor</label>
+            <select id="teacher_id" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <option value="">-- Choose Instructor Staff --</option>
+                {% for t in teachers %}
+                    <option value="{{ t.id }}">{{ t.name }} ({{ t.subject }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn" style="margin-top: 25px;">Finalize Schedule Slot</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('period-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const messageBox = document.getElementById('message-box');
+
+    const payload = {
+        day: document.getElementById('day').value,
+        start_time: document.getElementById('start_time').value,
+        end_time: document.getElementById('end_time').value,
+        class_id: parseInt(document.getElementById('class_id').value),
+        teacher_id: parseInt(document.getElementById('teacher_id').value)
+    };
+
+    try {
+        const response = await fetch('/api/v1/periods/new-period', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            messageBox.style.display = 'block';
+            messageBox.style.backgroundColor = '#d4edda'; messageBox.style.color = '#155724';
+            messageBox.innerText = '🎉 Timetable matrix updated successfully!';
+            setTimeout(() => { window.location.href = '/timetable'; }, 1500);
+        } else {
+            throw new Error(data.detail || 'Failed to map timetable period.');
+        }
+    } catch (error) {
+        messageBox.style.display = 'block';
+        messageBox.style.backgroundColor = '#f8d7da'; messageBox.style.color = '#721c24';
+        messageBox.innerText = `❌ Error: ${error.message}`;
+    }
+});
+</script>
+{% endblock %}

@@ -1,65 +1,48 @@
 {% extends "base.html" %}
-
-{% block title %}
-Student Details
-{% endblock %}
+{% block title %}Student Details{% endblock %}
 
 {% block content %}
-
 <div class="card">
+    <h2>👨‍🎓 Student Details</h2>
+    <table class="details-table">
+        <tr>
+            <td>Name</td>
+            <td>{{ student.name }}</td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td>{{ student.phone_number }}</td>
+        </tr>
+        <tr>
+            <td>Roll Number</td>
+            <td>{{ student.roll_number }}</td>
+        </tr>
 
-<h2>👨‍🎓 Student Details</h2>
-
-<table class="details-table">
-
-<tr>
-<td>Name</td>
-<td>{{ student.name }}</td>
-</tr>
-
-<tr>
-<td>Phone</td>
-<td>{{ student.phone_number }}</td>
-</tr>
-
-<tr>
-<td>Roll Number</td>
-<td>{{ student.roll_number }}</td>
-</tr>
-
-<tr>
-<td>Grade</td>
-<td>{{ student.grade }}</td>
-</tr>
-
-<tr>
-<td>Address Line 1</td>
-<td>{{ student.student_detail.address_line_1 }}</td>
-</tr>
-
-<tr>
-<td>Address Line 2</td>
-<td>{{ student.student_detail.address_line_2 }}</td>
-</tr>
-
-<tr>
-<td>State</td>
-<td>{{ student.student_detail.state }}</td>
-</tr>
-
-<tr>
-<td>Father Name</td>
-<td>{{ student.student_detail.father_name }}</td>
-</tr>
-
-</table>
-
-<br>
-
-<a href="/students" class="btn">
-← Back to Students
-</a>
-
+        <!-- --- NESTED DETAILS CHECKS --- -->
+        {% if student.details %}
+        <tr>
+            <td>Address Line 1</td>
+            <td>{{ student.details.address_line_1 }}</td>
+        </tr>
+        <tr>
+            <td>Address Line 2</td>
+            <td>{{ student.details.address_line_2 or 'N/A' }}</td>
+        </tr>
+        <tr>
+            <td>State</td>
+            <td>{{ student.details.state }}</td>
+        </tr>
+        <tr>
+            <td>Father's Name</td>
+            <td>{{ student.details.father_name }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="2" class="text-muted" style="text-align: center;">No additional details recorded for this profile.</td>
+        </tr>
+        {% endif %}
+    </table>
+    <br>
+    <a href="/students" class="btn">← Back to Students</a>
 </div>
-
 {% endblock %}

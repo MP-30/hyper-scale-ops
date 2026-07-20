@@ -1,17 +1,13 @@
+<!-- app/templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>
-        {% block title %}{% endblock %} | Hyper Scale Ops
-    </title>
-
+    <title>{% block title %}{% endblock %} | Hyper Scale Ops</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="icon" type="image/x-icon" href="/static/images/hyper_small.png">
 </head>
-
 <body>
 
 <header class="header">
@@ -20,38 +16,32 @@
             <img src="/static/images/hyper_very.png" alt="Hyper Scale Ops Logo" style="height: 1em; vertical-align: middle; margin-right: 10px;">
             Hyper Scale Ops
         </h1>
-        <p class="subtitle">
-            Student Management System
-        </p>
-
+        <p class="subtitle">Student Management System</p>
         <nav>
             <a href="/">🏠 Home</a>
             <a href="/students">📚 Students</a>
-            <a href="/students/new">➕ Add Student</a>
+            <a href="/classes">🏫 Classes</a>
+            <a href="/teachers">🧑‍🏫 Teachers</a>
+            <a href="/timetable">📅 Timetable</a>
         </nav>
     </div>
 </header>
 
 <main class="container">
-<div class="info-box">
+    <div class="info-box">
+        ℹ️ <strong>Demo Notice</strong>
+        <p>
+            This application uses a PostgreSQL database hosted on an Oracle Cloud in USA.
+            Because the backend communicates with a remote server, requests may occasionally take a few seconds to complete.
+        </p>
+    </div>
 
-ℹ️ <strong>Demo Notice</strong>
-
-<p>
-This application uses a PostgreSQL database hosted on an Oracle Cloud Free Tier (1 GB VM) in USA. Because the backend communicates with a remote server, requests may occasionally take a few seconds to complete. This deployment reflects a real cloud-based architecture rather than a local database.
-</p>
-
-</div>
-{% block content %}
-{% endblock %}
-
+    {% block content %}{% endblock %}
 </main>
 
 <footer>
     <div class="container">
-        <p>
-            Built with FastAPI • PostgreSQL • SQLAlchemy • Jinja2
-        </p>
+        <p>Built with FastAPI • PostgreSQL • SQLAlchemy • Jinja2 • Docker • GitHub Actions • Jenkins • Helm • Kubernetes</p>
     </div>
 </footer>
 

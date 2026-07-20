@@ -1,0 +1,31 @@
+<!-- app/templates/teachers.html -->
+{% extends "base.html" %}
+{% block title %}Teachers{% endblock %}
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>🧑‍🏫 Faculty Members</h2>
+        <a href="/teachers/new" class="btn-small">➕ Add Teacher</a>
+    </div>
+    <table class="table" style="margin-top: 15px;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Department Subject</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for teacher in teachers %}
+            <tr>
+                <td><strong>{{ teacher.name }}</strong></td>
+                <td>{{ teacher.subject }}</td>
+                <td><a class="btn-small" href="/teachers/{{ teacher.id }}">Profile Details</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" class="text-center text-muted">No teachers registered yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
