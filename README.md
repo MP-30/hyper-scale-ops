@@ -22,7 +22,7 @@ Hyper Scale Ops is a modern full-stack web application (I used jinja2 templates 
 
 This README is written with a recruiter and technical manager audience in mind, highlighting not just what the project does, but how it is built, how it scales in structure, and how it reflects professional software development practices.
 
-## Current Architecture
+## High-Level Architecture
 
 ```mermaid
 ---
@@ -30,92 +30,181 @@ config:
   fontFamily: Verdana, Geneva, sans-serif
   theme: neo-dark
   look: handDrawn
+  flowchart:
+    curve: basis
+    nodeSpacing: 45
+    rankSpacing: 80
 ---
-%%{init: {
-    "theme":"base",
-    "themeVariables":{
-        "fontSize":"38px"
-    },
-    "flowchart": {
-        "rankSpacing": 330,
-        "nodeSpacing": 50
-    },
-    "themeCSS": ".pyBlock polygon, [class*='pyBlock'] rect { fill: #FFD43B !important; background-color: #FFD43B !important; stroke: #306998 !important; stroke-width: 4px !important; color: #306998 !important; }"
-}}%%
+
 flowchart LR
-subgraph DEV["🟩 DEVELOPER WORKSTATION"]
-PY[Python]:::pyBlock
-UV[uv]
-PC[PyCharm Pro]
-PM[Postman]
-GIT[Git]
+
+%% ==========================
+%% Developer
+%% ==========================
+
+subgraph DEV["👨‍💻 Developer"]
+    PY["🐍 Python 3.12"]
+    UV["⚡ uv"]
+    IDE["💻 PyCharm Pro"]
+    POSTMAN["📬 Postman"]
+    GIT["🌿 Git"]
 end
 
-subgraph SCM["🟩 SOURCE CONTROL"]
-GH[GitHub]
+%% ==========================
+%% Source Control
+%% ==========================
+
+subgraph SCM["☁️ Source Control"]
+    GH["GitHub"]
 end
 
-subgraph CI["🟩 JENKINS CI/CD"]
-J[Jenkins]
-R[Ruff]
-T[Pytest]
-B[Build Docker Image]
-DH[Push Docker Image]
-N1[Slack Notification]
-N2[Email Notification]
+%% ==========================
+%% CI/CD
+%% ==========================
+
+subgraph CICD["🚀 GitHub Actions"]
+    LINT["Ruff"]
+    TEST["Pytest"]
+    BUILD["Docker Build"]
+    PUSH["Push Image"]
 end
 
-subgraph REG["🟩 CONTAINER REGISTRY"]
-HUB[Docker Hub]
+%% ==========================
+%% Registry
+%% ==========================
+
+subgraph REG["📦 Container Registry"]
+    HUB["Docker Hub"]
 end
 
-subgraph CLOUD["🟩 HEROKU"]
-HEROKU[Heroku]
-DOMAIN[dev.adityalive.tech]
-SSL[SSL HTTPS]
+%% ==========================
+%% Kubernetes
+%% ==========================
+
+subgraph K8S["☸️ Kubernetes Cluster"]
+
+    INGRESS["NGINX Ingress"]
+
+    subgraph APP["Hyper-Scale-Ops"]
+
+        POD1["FastAPI Pod"]
+        POD2["FastAPI Pod"]
+
+        HELM["Helm Chart"]
+
+    end
+
 end
 
-subgraph APP["🟩 FASTAPI APPLICATION"]
-API[FastAPI]
-ASYNC[Async]
-PYD[Pydantic]
-SQLA[SQLAlchemy Async]
-ALE[Alembic]
-JINJA[Jinja2]
+%% ==========================
+%% Database
+%% ==========================
+
+subgraph DB["🗄️ PostgreSQL"]
+
+    DEVDB["dev"]
+
+    TESTDB["test"]
+
+    PYTEST["pytest"]
+
+    PROD["prod"]
+
 end
 
-subgraph DB["🟩 ORACLE CLOUD POSTGRESQL"]
-DEV1[dev1]
-DEV2[dev2]
-TEST[test]
-PYTESTDB[pytest]
-PROD[prod]
+%% ==========================
+%% Observability
+%% ==========================
+
+subgraph OBS["📈 Observability"]
+
+    OTEL["OpenTelemetry"]
+
+    PROM["Prometheus"]
+
+    GRAF["Grafana"]
+
+    DD["Datadog"]
+
 end
 
-subgraph OBS["🟩 OBSERVABILITY"]
-DD[Datadog]
+%% ==========================
+%% Secret Management
+%% ==========================
+
+subgraph SEC["🔐 Secret Management"]
+
+    GHSEC["GitHub Secrets"]
+
+    K8SSEC["Kubernetes Secrets"]
+
+    VAULT["HashiCorp Vault (Planned)"]
+
 end
 
-PY-->UV-->API
-PC-->API
-PM-->API
-GIT-->GH-->J
-J-->R-->T-->B-->DH-->HUB
-HUB-->HEROKU
-HEROKU-->DOMAIN-->SSL
-API-->ASYNC
-API-->PYD
-API-->SQLA
-API-->ALE
-API-->JINJA
-SQLA-->DEV1
-SQLA-->DEV2
-SQLA-->TEST
-SQLA-->PYTESTDB
-SQLA-->PROD
-API-->DD
-T-->N1
-T-->N2
+%% ==========================
+%% Flow
+%% ==========================
+
+PY --> UV
+IDE --> GIT
+POSTMAN --> INGRESS
+
+GIT --> GH
+
+GH --> LINT
+LINT --> TEST
+TEST --> BUILD
+BUILD --> PUSH
+PUSH --> HUB
+
+HUB --> HELM
+HELM --> POD1
+HELM --> POD2
+
+INGRESS --> POD1
+INGRESS --> POD2
+
+POD1 --> DEVDB
+POD1 --> TESTDB
+POD1 --> PYTEST
+POD1 --> PROD
+
+POD2 --> DEVDB
+POD2 --> TESTDB
+POD2 --> PYTEST
+POD2 --> PROD
+
+POD1 --> OTEL
+POD2 --> OTEL
+
+OTEL --> PROM
+PROM --> GRAF
+OTEL --> DD
+
+GHSEC --> BUILD
+K8SSEC --> POD1
+K8SSEC --> POD2
+VAULT -. Future .-> POD1
+VAULT -. Future .-> POD2
+
+%% ==========================
+%% Styling
+%% ==========================
+
+classDef dev fill:#E3F2FD,stroke:#1565C0,stroke-width:2,color:#000;
+classDef ci fill:#FFF8E1,stroke:#EF6C00,stroke-width:2,color:#000;
+classDef app fill:#E8F5E9,stroke:#2E7D32,stroke-width:2,color:#000;
+classDef db fill:#F3E5F5,stroke:#6A1B9A,stroke-width:2,color:#000;
+classDef obs fill:#FFF3E0,stroke:#E65100,stroke-width:2,color:#000;
+classDef sec fill:#FCE4EC,stroke:#AD1457,stroke-width:2,color:#000;
+
+class PY,UV,IDE,POSTMAN,GIT,GH dev
+class LINT,TEST,BUILD,PUSH,HUB ci
+class INGRESS,POD1,POD2,HELM app
+class DEVDB,TESTDB,PYTEST,PROD db
+class OTEL,PROM,GRAF,DD obs
+class GHSEC,K8SSEC,VAULT sec
 
 ```
 
@@ -129,17 +218,63 @@ config:
   fontFamily: Verdana, Geneva, sans-serif
   look: handDrawn
 ---
-flowchart LR
-DEV[Developer]-->GH[GitHub]
-GH-->J[Jenkins]
-J-->L[Ruff]
-L-->P[Pytest]
-P-->D[Build Docker Image]
-D-->H[Push to Docker Hub]
-H-->HEROKU[Deploy to Heroku]
-HEROKU-->LIVE[dev.adityalive.tech]
-J-->S[Slack Notification]
-J-->E[Email Notification]
+
+flowchart TB
+
+subgraph SCM["Source Control"]
+    DEV["Developer"]
+    GIT["GitHub"]
+end
+
+subgraph CI["Continuous Integration"]
+
+    PR["Pull Request"]
+
+    LINT["Ruff"]
+
+    TEST["Pytest"]
+
+    BUILD["Docker Build"]
+
+end
+
+subgraph REG["Container Registry"]
+
+    HUB["Docker Hub"]
+
+end
+
+subgraph CD["Continuous Deployment"]
+
+    HELM["Helm Upgrade"]
+
+    K8S["Kubernetes"]
+
+end
+
+subgraph APP["Application"]
+
+    POD["FastAPI Pods"]
+
+end
+
+DEV --> GIT
+
+GIT --> PR
+
+PR --> LINT
+
+LINT --> TEST
+
+TEST --> BUILD
+
+BUILD --> HUB
+
+HUB --> HELM
+
+HELM --> K8S
+
+K8S --> POD
 
 
 ```
@@ -248,6 +383,276 @@ mindmap
       🟢 Heroku
       ⚪ AWS
       🟢 DigitalOcean
+```
+
+
+## Git Branching Strategy
+
+```mermaid
+---
+title: Hyper-Scale-Ops Git Branching Strategy
+config:
+  theme: neo-dark
+  fontFamily: Verdana, Geneva, sans-serif
+  look: handDrawn
+  flowchart:
+    curve: basis
+    rankSpacing: 70
+    nodeSpacing: 50
+---
+
+gitGraph
+    commit id: "Project Init"
+
+    branch feature/student-service
+    checkout feature/student-service
+    commit id: "Student CRUD"
+    commit id: "Unit Tests"
+    checkout main
+    merge feature/student-service
+
+    branch feature/teacher-service
+    checkout feature/teacher-service
+    commit id: "Teacher APIs"
+    checkout main
+    merge feature/teacher-service
+
+    branch feature/helm
+    checkout feature/helm
+    commit id: "Helm Chart"
+    commit id: "Ingress"
+    checkout main
+    merge feature/helm
+
+    branch dev-deploy
+    checkout dev-deploy
+    commit id: "Deploy to Dev Server"
+
+    checkout main
+    commit id: "Production Release"
+```
+
+
+## Database Design (ER Diagram)
+
+```mermaid
+---
+title: Hyper-Scale-Ops ER Diagram
+config:
+  theme: neo-dark
+  fontFamily: Verdana, Geneva, sans-serif
+  look: handDrawn
+  flowchart:
+    curve: basis
+    rankSpacing: 70
+    nodeSpacing: 50
+---
+
+erDiagram
+    classes ||--o{ students : "has many"
+    classes ||--o{ periods : "schedules"
+    teachers ||--o{ periods : "teaches"
+    students ||--|| student_details : "has explicit profile (1:1)"
+    
+    classes {
+        int id PK "autoincrement"
+        string name "String(50)"
+        int level
+        datetime created_at
+        datetime updated_at
+    }
+
+    students {
+        int id PK "autoincrement"
+        string name "String(255)"
+        string phone_number "String(20)"
+        string roll_number UK "String(50)"
+        int class_id FK "nullable"
+        datetime created_at
+        datetime updated_at
+    }
+
+    student_details {
+        int id PK "autoincrement"
+        int student_id FK, UK "ondelete=CASCADE"
+        string address_line_1 "String(255)"
+        string address_line_2 "String(255), nullable"
+        string state "String(100)"
+        string father_name "String(255)"
+        datetime created_at
+        datetime updated_at
+    }
+
+    teachers {
+        int id PK "autoincrement"
+        string name "String(255)"
+        string phone_number "String(20)"
+        string subject "String(100)"
+        datetime created_at
+        datetime updated_at
+    }
+
+    periods {
+        int id PK "autoincrement"
+        int class_id FK
+        int teacher_id FK
+        string day "String(20)"
+        time start_time
+        time end_time
+        datetime created_at
+        datetime updated_at
+    }
+
+    alembic_version {
+        string version_num PK "String(32)"
+    }
+```
+
+
+
+## Kubernetes Architecture
+
+```mermaid
+---
+title: Hyper-Scale-Ops Kubernetes Architecture
+config:
+  theme: neo-dark
+  fontFamily: Verdana, Geneva, sans-serif
+  look: handDrawn
+  flowchart:
+    curve: basis
+    rankSpacing: 70
+    nodeSpacing: 50
+---
+
+flowchart TB
+
+%% =====================
+%% External
+%% =====================
+
+USER["👤 User"]
+
+DNS["🌍 DNS<br/>adityalive.tech"]
+
+TLS["🔒 Let's Encrypt<br/>cert-manager"]
+
+USER --> DNS
+DNS --> TLS
+
+%% =====================
+%% Cluster
+%% =====================
+
+subgraph CLUSTER["☸️ Kubernetes Cluster"]
+
+ING["NGINX Ingress"]
+
+SVC["ClusterIP Service"]
+
+DEP["Deployment"]
+
+POD1["FastAPI Pod #1"]
+
+POD2["FastAPI Pod #2"]
+
+CM["ConfigMap"]
+
+SECRET["Secret"]
+
+end
+
+TLS --> ING
+
+ING --> SVC
+
+SVC --> DEP
+
+DEP --> POD1
+DEP --> POD2
+
+CM --> POD1
+CM --> POD2
+
+SECRET --> POD1
+SECRET --> POD2
+
+%% =====================
+%% Database
+%% =====================
+
+subgraph DB["🗄 Oracle Cloud"]
+
+PG["PostgreSQL"]
+
+end
+
+POD1 --> PG
+POD2 --> PG
+
+%% =====================
+%% Helm
+%% =====================
+
+subgraph HELM["📦 Helm"]
+
+CHART["Chart.yaml"]
+
+VALUES["values.yaml"]
+
+ENV["Environment Values<br/>dev / test / prod"]
+
+TEMPLATE["Templates"]
+
+end
+
+CHART --> TEMPLATE
+VALUES --> TEMPLATE
+ENV --> TEMPLATE
+
+TEMPLATE -. deploy .-> DEP
+
+%% =====================
+%% CI/CD
+%% =====================
+
+subgraph CICD["⚙️ CI/CD"]
+
+GH["GitHub"]
+
+ACTION["GitHub Actions"]
+
+REG["Docker Hub"]
+
+end
+
+GH --> ACTION
+ACTION --> REG
+REG --> DEP
+
+%% =====================
+%% Observability
+%% =====================
+
+subgraph OBS["📈 Observability"]
+
+OTEL["OpenTelemetry"]
+
+PROM["Prometheus"]
+
+GRAF["Grafana"]
+
+DD["Datadog"]
+
+end
+
+POD1 --> OTEL
+POD2 --> OTEL
+
+OTEL --> PROM
+PROM --> GRAF
+
+OTEL --> DD
 ```
 
 ## Why This Project Matters
