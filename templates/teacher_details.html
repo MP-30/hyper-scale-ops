@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Teacher Profile{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>🧑‍🏫 Faculty Profile</h2>
+    <table class="details-table">
+        <tr>
+            <td><strong>Name</strong></td>
+            <td>{{ teacher.name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Department Subject</strong></td>
+            <td>{{ teacher.subject }}</td>
+        </tr>
+    </table>
+    <br>
+    <a href="/teachers" class="btn">← Back to Teachers</a>
+</div>
+{% endblock %}

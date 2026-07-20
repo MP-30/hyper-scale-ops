@@ -1,13 +1,12 @@
-from typing import Optional
-
-from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import (
-    Mapped,
-    mapped_column,
-    relationship,
-)
+from typing import TYPE_CHECKING, Optional
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.models_base import Base
+from sqlalchemy import DateTime, func, String, ForeignKey
+from datetime import  datetime
+
+if TYPE_CHECKING:
+    from app.models.classes import Class
 
 
 class Student(Base):
@@ -35,9 +34,21 @@ class Student(Base):
         nullable=False
     )
 
-    grade: Mapped[str] = mapped_column(
-        String(20),
-        nullable=False
+    class_id: Mapped[int] = mapped_column(
+        ForeignKey("classes.id"),
+        nullable=True
+    )
+
+    classroom: Mapped["Class"] = relationship(
+        back_populates="students"
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
     details: Mapped["StudentDetails"] = relationship(
@@ -82,6 +93,14 @@ class StudentDetails(Base):
     father_name: Mapped[str] = mapped_column(
         String(255),
         nullable=False
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
     student: Mapped["Student"] = relationship(
