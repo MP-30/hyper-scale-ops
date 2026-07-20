@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Class Details{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>🏫 Class Structure Overview</h2>
+    <table class="details-table">
+        <tr>
+            <td><strong>Room Designation</strong></td>
+            <td>{{ classroom.name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Academic Tier Level</strong></td>
+            <td>Level {{ classroom.level }}</td>
+        </tr>
+    </table>
+
+    <h3 style="margin-top: 30px;">👨‍🎓 Enrolled Students In This Class</h3>
+    <table class="table" style="margin-top: 10px;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Roll No.</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Ensure your Class model eager-loads 'students' relationship if displaying this block -->
+            {% for student in classroom.students %}
+            <tr>
+                <td>{{ student.name }}</td>
+                <td>{{ student.roll_number }}</td>
+                <td><a class="btn-small" href="/students/{{ student.id }}">View File</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" class="text-center text-muted">No students assigned to this section yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="/classes" class="btn">← Back to Classes</a>
+</div>
+{% endblock %}

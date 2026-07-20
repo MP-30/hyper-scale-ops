@@ -1,70 +1,117 @@
+<!-- app/templates/student_form.html -->
 {% extends "base.html" %}
 
-{% block title %}
-Add Student
-{% endblock %}
+{% block title %}Add Student{% endblock %}
 
 {% block content %}
-
 <div class="card">
-
     <h2>➕ Add New Student</h2>
-    <p class="text-muted">
-        Fill in the details below to register a new student.
-    </p>
+    <p class="text-muted">Fill in the details below to register a new student.</p>
 
-    <form method="POST">
+    <!-- Context notification banner for dynamic alerts -->
+    <div id="message-box" style="display: none; padding: 12px; margin-bottom: 20px; border-radius: 4px; font-weight: bold;"></div>
 
+    <form id="student-form">
         <div class="form-group">
-            <label>Name</label>
-            <input type="text" id="name" name="name" required>
+            <label for="name">Name</label>
+            <input type="text" id="name" required>
         </div>
 
         <div class="form-group">
-            <label>Phone Number</label>
-            <input type="text" id="phone_number" name="phone_number" required>
+            <label for="phone_number">Phone Number</label>
+            <input type="text" id="phone_number" required>
         </div>
 
         <div class="form-group">
-            <label>Roll Number</label>
-            <input type="text" id="roll_number" name="roll_number" required>
+            <label for="roll_number">Roll Number</label>
+            <input type="text" id="roll_number" required>
         </div>
 
         <div class="form-group">
-            <label>Grade</label>
-            <input type="text" id="grade" name="grade" required>
+            <label for="class_id">Assigned Class Room</label>
+            <select id="class_id" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <option value="">-- Select Active Class --</option>
+                {% for c in classes %}
+                    <option value="{{ c.id }}">{{ c.name }} (Level {{ c.level }})</option>
+                {% endfor %}
+            </select>
         </div>
 
-        <hr>
-
+        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;">
         <h3>🏠 Student Details</h3>
 
         <div class="form-group">
-            <label>Address Line 1</label>
-            <input type="text" id="address_line_1" name="address_line_1" required>
+            <label for="address_line_1">Address Line 1</label>
+            <input type="text" id="address_line_1" required>
         </div>
 
         <div class="form-group">
-            <label>Address Line 2</label>
-            <input type="text" id="address_line_2" name="address_line_2">
+            <label for="address_line_2">Address Line 2 (Optional)</label>
+            <input type="text" id="address_line_2">
         </div>
 
         <div class="form-group">
-            <label>State</label>
-            <input type="text" id="state" name="state" required>
+            <label for="state">State</label>
+            <input type="text" id="state" required>
         </div>
 
         <div class="form-group">
-            <label>Father Name</label>
-            <input type="text" id="father_name" name="father_name" required>
+            <label for="father_name">Father's Name</label>
+            <input type="text" id="father_name" required>
         </div>
 
-        <button class="btn">
-            Save Student
-        </button>
-
+        <button type="submit" class="btn" style="margin-top: 15px;">Save Student</button>
     </form>
-
 </div>
 
+<script>
+document.getElementById('student-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const messageBox = document.getElementById('message-box');
+
+    // Package data to precisely match your Pydantic v2 validation schema structure
+    const payload = {
+        name: document.getElementById('name').value,
+        phone_number: document.getElementById('phone_number').value,
+        roll_number: document.getElementById('roll_number').value,
+        class_id: parseInt(document.getElementById('class_id').value) || null,
+        details: {
+            address_line_1: document.getElementById('address_line_1').value,
+            address_line_2: document.getElementById('address_line_2').value || null,
+            state: document.getElementById('state').value,
+            father_name: document.getElementById('father_name').value
+        }
+    };
+
+    try {
+        // Adjust this endpoint string if your API mounts to a prefix like /api/v1/students
+        const response = await fetch('/api/v1/students', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            messageBox.style.display = 'block';
+            messageBox.style.backgroundColor = '#d4edda';
+            messageBox.style.color = '#155724';
+            messageBox.innerText = '🎉 Student record successfully saved!';
+
+            setTimeout(() => {
+                window.location.href = '/students';
+            }, 1500);
+        } else {
+            throw new Error(data.detail || 'Failed to save student profile records.');
+        }
+    } catch (error) {
+        messageBox.style.display = 'block';
+        messageBox.style.backgroundColor = '#f8d7da';
+        messageBox.style.color = '#721c24';
+        messageBox.innerText = `❌ Error: ${error.message}`;
+    }
+});
+</script>
 {% endblock %}
