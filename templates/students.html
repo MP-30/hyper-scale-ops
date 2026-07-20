@@ -20,7 +20,7 @@ List of registered students.
 <tr>
     <th>Name</th>
     <th>Roll No.</th>
-    <th>Grade</th>
+    <th>Class</th>
     <th>Phone</th>
     <th>Action</th>
 </tr>
@@ -36,7 +36,7 @@ List of registered students.
 
 <td>{{ student.roll_number }}</td>
 
-<td>{{ student.grade }}</td>
+<td>{{ student.classroom.name if student.classroom else 'Unassigned' }}</td>
 
 <td>{{ student.phone_number }}</td>
 

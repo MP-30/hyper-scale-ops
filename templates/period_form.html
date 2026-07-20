@@ -19,11 +19,6 @@
             </select>
         </div>
 
-        <div class="form-group" style="margin-top: 15px;">
-            <label for="subject">Subject Title</label>
-            <input type="text" id="subject" placeholder="e.g. Advanced Calculus" required style="width: 100%; padding: 8px; margin-top: 5px;">
-        </div>
-
         <div class="form-group" style="margin-top: 15px; display: flex; gap: 15px;">
             <div style="flex: 1;">
                 <label for="start_time">Start Time</label>
@@ -65,9 +60,7 @@ document.getElementById('period-form').addEventListener('submit', async (e) => {
     const messageBox = document.getElementById('message-box');
 
     const payload = {
-        // Adjust field keys ('day' or 'day_of_week') to mirror your exact Pydantic/Database schema layout
         day: document.getElementById('day').value,
-        subject: document.getElementById('subject').value,
         start_time: document.getElementById('start_time').value,
         end_time: document.getElementById('end_time').value,
         class_id: parseInt(document.getElementById('class_id').value),
@@ -75,7 +68,7 @@ document.getElementById('period-form').addEventListener('submit', async (e) => {
     };
 
     try {
-        const response = await fetch('/api/v1/periods', {
+        const response = await fetch('/api/v1/periods/new-period', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)

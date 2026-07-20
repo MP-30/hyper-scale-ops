@@ -18,7 +18,10 @@ class StudentService:
     @staticmethod
     async def get_all_students(db: AsyncSession):
         result = await db.execute(
-            select(Student).options(selectinload(Student.details))
+            select(Student).options(
+                selectinload(Student.classroom),
+                selectinload(Student.details),
+            )
         )
         return result.scalars().all()
 
