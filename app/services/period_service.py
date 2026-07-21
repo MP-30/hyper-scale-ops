@@ -16,7 +16,13 @@ class PeriodService:
         db: AsyncSession,
         payload: PeriodCreate,
     ):
-        app_logger.info(f"Creating period '{payload.name}'")
+        app_logger.bind(
+            class_id=payload.class_id,
+            teacher_id=payload.teacher_id,
+            day=payload.day,
+            start_time=str(payload.start_time),
+            end_time=str(payload.end_time),
+        ).info("Creating period")
         try:
             period = Period(**payload.model_dump())
             db.add(period)
@@ -28,7 +34,11 @@ class PeriodService:
                     "classroom",
                 ],
             )
-            app_logger.info(f"Period created successfully. id={period.id}")
+            app_logger.bind(
+                period_id=period.id,
+                class_id=period.class_id,
+                teacher_id=period.teacher_id,
+            ).info("Period created successfully")
             return period
         except Exception:
             await db.rollback()
