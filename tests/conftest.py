@@ -38,7 +38,7 @@ async def clean_database() -> None:
     async with AsyncSessionLocal() as session:
         # Combined into a single fast statement, including periods and classes
         await session.execute(
-            text("TRUNCATE TABLE classes, periods, students, student_details RESTART IDENTITY CASCADE;")
+            text("TRUNCATE TABLE periods, teachers, classes, students, student_details RESTART IDENTITY CASCADE;")
         )
         await session.commit()
     yield

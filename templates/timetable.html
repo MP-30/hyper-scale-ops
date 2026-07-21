@@ -27,7 +27,7 @@
                 <td>{{ period.start_time }} - {{ period.end_time }}</td>
                 <td>{{ period.classroom.name if period.classroom else 'No Class Assigned' }}</td>
                 <td>{{ period.teacher.name if period.teacher else 'No Teacher Assigned' }}</td>
-                <td><span class="badge">{{ period.subject }}</span></td>
+                <td><span class="badge">{{ period.teacher.subject if period.teacher else 'No Teacher Assigned' }}</span></td>
             </tr>
             {% else %}
             <tr><td colspan="5" class="text-center text-muted">Timetable matrix is currently empty.</td></tr>

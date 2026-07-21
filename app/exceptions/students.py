@@ -15,7 +15,7 @@ class StudentNotFoundException(AppException):
 class StudentAlreadyExistsException(AppException):
     def __init__(self, roll_number: str):
         super().__init__(
-            message=f"Student with roll number '{roll_number}' already exists.",
+            message=f"Student with roll number '{roll_number}' already exists",
             status_code=HTTPStatus.CONFLICT,
             error_code="STUDENT_ALREADY_EXISTS",
         )

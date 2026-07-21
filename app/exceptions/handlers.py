@@ -14,6 +14,7 @@ def register_exception_handlers(app: FastAPI):
             status_code=exc.status_code,
             content={
                 "success": False,
+                "detail": exc.message.rstrip("."),
                 "error": {
                     "code": exc.error_code,
                     "message": exc.message,
@@ -27,6 +28,7 @@ def register_exception_handlers(app: FastAPI):
             status_code=422,
             content={
                 "success": False,
+                "detail": exc.errors(),
                 "error": {
                     "code": "VALIDATION_ERROR",
                     "message": "Validation Failed",
@@ -41,6 +43,7 @@ def register_exception_handlers(app: FastAPI):
             status_code=409,
             content={
                 "success": False,
+                "detail": "Database constraint violation.",
                 "error": {
                     "code": "DATABASE_CONSTRAINT",
                     "message": "Database constraint violation.",
@@ -54,6 +57,7 @@ def register_exception_handlers(app: FastAPI):
             status_code=500,
             content={
                 "success": False,
+                "detail": "Database error.",
                 "error": {
                     "code": "DATABASE_ERROR",
                     "message": "Database error.",
@@ -67,6 +71,7 @@ def register_exception_handlers(app: FastAPI):
             status_code=500,
             content={
                 "success": False,
+                "detail": "Unexpected error occurred.",
                 "error": {
                     "code": "INTERNAL_SERVER_ERROR",
                     "message": "Unexpected error occurred.",
