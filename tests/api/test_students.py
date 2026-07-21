@@ -96,7 +96,11 @@ async def test_fetch_student_not_found(client: AsyncClient):
     """Verify fetching a non-existent student returns 404."""
     response = await client.get("/api/v1/fetch-one-student/99999")
     assert response.status_code == 404
-    assert response.json()["detail"] == "Student record not found"
+    body = response.json()
+
+    assert body["success"] is False
+    assert body["error"]["code"] == "STUDENT_NOT_FOUND"
+    assert body["error"]["message"] == "Student record not found."
 
 
 async def test_modify_student_not_found(client: AsyncClient):

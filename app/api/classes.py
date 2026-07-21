@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -9,13 +9,12 @@ from app.schemas.classes import (
 )
 from app.services.class_service import ClassService
 
-
 v1 = APIRouter()
 
 
 @v1.get(
     "/all-classes",
-    response_model=list[ClassResponse]
+    response_model=list[ClassResponse],
 )
 async def get_all_classes(
     db: AsyncSession = Depends(get_db),
@@ -25,30 +24,22 @@ async def get_all_classes(
 
 @v1.get(
     "/fetch-one-class/{class_id}",
-    response_model=ClassResponse
+    response_model=ClassResponse,
 )
-async def fetch_one_class(
+async def get_class(
     class_id: int,
     db: AsyncSession = Depends(get_db),
 ):
-    classroom = await ClassService.get_class(
+    return await ClassService.get_class(
         db,
-        class_id
+        class_id,
     )
-
-    if not classroom:
-        raise HTTPException(
-            status_code=404,
-            detail="Class not found"
-        )
-
-    return classroom
 
 
 @v1.post(
     "/new-class",
     response_model=ClassResponse,
-    status_code=201
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_class(
     payload: ClassCreate,
@@ -56,52 +47,35 @@ async def create_class(
 ):
     return await ClassService.create_class(
         db,
-        payload
+        payload,
     )
 
 
 @v1.put(
     "/modify-class/{class_id}",
-    response_model=ClassResponse
+    response_model=ClassResponse,
 )
 async def update_class(
     class_id: int,
     payload: ClassUpdate,
     db: AsyncSession = Depends(get_db),
 ):
-    classroom = await ClassService.update_class(
+    return await ClassService.update_class(
         db,
         class_id,
-        payload
+        payload,
     )
-
-    if not classroom:
-        raise HTTPException(
-            status_code=404,
-            detail="Class not found"
-        )
-
-    return classroom
 
 
 @v1.delete(
-    "/delete-class/{class_id}"
+    "/delete-class/{class_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_class(
     class_id: int,
     db: AsyncSession = Depends(get_db),
 ):
-    deleted = await ClassService.delete_class(
+    await ClassService.delete_class(
         db,
-        class_id
+        class_id,
     )
-
-    if not deleted:
-        raise HTTPException(
-            status_code=404,
-            detail="Class not found"
-        )
-
-    return {
-        "message": "Class deleted successfully"
-    }

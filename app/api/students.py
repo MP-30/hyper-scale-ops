@@ -27,9 +27,15 @@ async def update_student(student_id: int, payload: StudentUpdate, db: AsyncSessi
     return await StudentService.update_student(db, student_id, payload)
 
 
-@v1.delete("/delete-student/{student_id}", status_code=status.HTTP_204_NO_CONTENT,)
-async def delete_student(student_id: int, db: AsyncSession = Depends(get_db)):
-    await StudentService.delete_student(db, student_id)
+@v1.delete("/delete-student/{student_id}")
+async def delete_student(
+    student_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    await StudentService.delete_student(
+        db,
+        student_id,
+    )
     return {
-                "message": "Student deleted successfully"
-        }
+        "message": "Student record deleted successfully"
+    }
