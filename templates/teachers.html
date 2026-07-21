@@ -16,15 +16,17 @@
             </tr>
         </thead>
         <tbody>
-            {% for teacher in teachers %}
-            <tr>
-                <td><strong>{{ teacher.name }}</strong></td>
-                <td>{{ teacher.subject }}</td>
-                <td><a class="btn-small" href="/teachers/{{ teacher.id }}">Profile Details</a></td>
-            </tr>
+            {% if teachers %}
+                {% for teacher in teachers %}
+                <tr>
+                    <td><strong>{{ teacher.name }}</strong></td>
+                    <td>{{ teacher.subject }}</td>
+                    <td><a class="btn-small" href="/teachers/{{ teacher.id }}">Profile Details</a></td>
+                </tr>
+                {% endfor %}
             {% else %}
-            <tr><td colspan="3" class="text-center text-muted">No teachers registered yet.</td></tr>
-            {% endfor %}
+                <tr><td colspan="3" class="text-center text-muted">No teachers registered yet.</td></tr>
+            {% endif %}
         </tbody>
     </table>
 </div>

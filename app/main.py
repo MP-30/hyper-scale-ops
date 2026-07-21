@@ -13,12 +13,19 @@ from app.api.pages import pages_router
 from app.api.students import v1 as students_router
 from app.api.classes import v1 as class_router
 from app.api.teachers import v1 as teacher_router
-from app.api.periods import v1 as periods_router  # Added missing import
+from app.api.periods import v1 as periods_router
+
+from app.exceptions.handlers import register_exception_handlers
+from app.core.middleware import LoggingMiddleware
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 app = FastAPI(
     title="Hyper-Scale-Ops-API",
 )
+
+register_exception_handlers(app)
+app.add_middleware(LoggingMiddleware)
 
 app.mount(
     "/static",

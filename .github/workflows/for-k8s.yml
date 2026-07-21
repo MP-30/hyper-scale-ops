@@ -81,7 +81,7 @@ jobs:
 
           sed -i \
           "s/tag:.*/tag: \"${{ github.run_number }}\"/" \
-          environments/dev/values.yaml
+          environments/test/values.yaml
 
 
           git config user.name "github-actions"
@@ -89,7 +89,7 @@ jobs:
           git config user.email "github-actions@github.com"
 
 
-          git add environments/dev/values.yaml
+          git add environments/test/values.yaml
 
           git commit -m "Update image tag to ${{ github.run_number }}"
 
