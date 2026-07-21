@@ -3,18 +3,53 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from app.models.periods import Period
 from app.schemas.periods import PeriodCreate
+from app.core.logger import app_logger
+from app.exceptions.periods import PeriodNotFoundException
+from app.schemas.periods import (
+    PeriodCreate,
+    PeriodUpdate,
+)
 
 class PeriodService:
     @staticmethod
-    async def create_period(db: AsyncSession, payload: PeriodCreate):
-        period = Period(**payload.model_dump())
-        db.add(period)
-        await db.commit()
-        await db.refresh(period, ["teacher", "classroom"])
-        return period
+    async def create_period(
+        db: AsyncSession,
+        payload: PeriodCreate,
+    ):
+        app_logger.bind(
+            class_id=payload.class_id,
+            teacher_id=payload.teacher_id,
+            day=payload.day,
+            start_time=str(payload.start_time),
+            end_time=str(payload.end_time),
+        ).info("Creating period")
+        try:
+            period = Period(**payload.model_dump())
+            db.add(period)
+            await db.commit()
+            await db.refresh(
+                period,
+                attribute_names=[
+                    "teacher",
+                    "classroom",
+                ],
+            )
+            app_logger.bind(
+                period_id=period.id,
+                class_id=period.class_id,
+                teacher_id=period.teacher_id,
+            ).info("Period created successfully")
+            return period
+        except Exception:
+            await db.rollback()
+            app_logger.exception("Failed creating period")
+            raise
 
-    @classmethod
-    async def get_all_periods(cls, db: AsyncSession):
+    @staticmethod
+    async def get_all_periods(
+        db: AsyncSession,
+    ):
+        app_logger.info("Fetching all periods")
         result = await db.execute(
             select(Period).options(
                 selectinload(Period.classroom),
@@ -24,10 +59,75 @@ class PeriodService:
         return result.scalars().all()
 
     @staticmethod
-    async def get_period(db: AsyncSession, period_id: int):
+    async def get_period(
+        db: AsyncSession,
+        period_id: int,
+    ):
+        app_logger.info(f"Fetching period {period_id}")
         result = await db.execute(
             select(Period)
-            .options(selectinload(Period.teacher), selectinload(Period.classroom))
+            .options(
+                selectinload(Period.teacher),
+                selectinload(Period.classroom),
+            )
             .where(Period.id == period_id)
         )
-        return result.scalar_one_or_none()
+        period = result.scalar_one_or_none()
+        if period is None:
+            raise PeriodNotFoundException(period_id)
+        return period
+
+    @staticmethod
+    async def update_period(
+        db: AsyncSession,
+        period_id: int,
+        payload: PeriodUpdate,
+    ):
+        app_logger.info(f"Updating period {period_id}")
+        period = await PeriodService.get_period(
+            db,
+            period_id,
+        )
+        try:
+            data = payload.model_dump(
+                exclude_unset=True,
+            )
+            for key, value in data.items():
+                setattr(
+                    period,
+                    key,
+                    value,
+                )
+            await db.commit()
+            await db.refresh(
+                period,
+                attribute_names=[
+                    "teacher",
+                    "classroom",
+                ],
+            )
+            app_logger.info(f"Period updated successfully. id={period_id}")
+            return period
+        except Exception:
+            await db.rollback()
+            app_logger.exception(f"Failed updating period {period_id}")
+            raise
+
+    @staticmethod
+    async def delete_period(
+        db: AsyncSession,
+        period_id: int,
+    ):
+        app_logger.info(f"Deleting period {period_id}")
+        period = await PeriodService.get_period(
+            db,
+            period_id,
+        )
+        try:
+            await db.delete(period)
+            await db.commit()
+            app_logger.info(f"Period deleted successfully. id={period_id}")
+        except Exception:
+            await db.rollback()
+            app_logger.exception(f"Failed deleting period {period_id}")
+            raise

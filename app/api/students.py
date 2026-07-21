@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
@@ -10,14 +10,9 @@ v1 = APIRouter()
 
 @v1.post("/new-student", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 async def create_student(payload: StudentCreate, db: AsyncSession = Depends(get_db)):
-    try:
-        return await StudentService.create_student(db, payload)
-    except Exception as e:
-        # Catches foreign key issues like setting a class_id that doesn't exist
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Failed to create student. Ensure class_id is valid. Error: {str(e)}"
-        )
+
+    return await StudentService.create_student(db, payload)
+
 
 @v1.get("/all-students", response_model=List[StudentResponse])
 async def get_all_students(db: AsyncSession = Depends(get_db)):
@@ -25,21 +20,22 @@ async def get_all_students(db: AsyncSession = Depends(get_db)):
 
 @v1.get("/fetch-one-student/{student_id}", response_model=StudentResponse)
 async def get_student(student_id: int, db: AsyncSession = Depends(get_db)):
-    student = await StudentService.get_student(db, student_id)
-    if not student:
-        raise HTTPException(status_code=404, detail="Student record not found")
-    return student
+    return await StudentService.get_student(db, student_id)
 
 @v1.put("/modify-student/{student_id}", response_model=StudentResponse)
 async def update_student(student_id: int, payload: StudentUpdate, db: AsyncSession = Depends(get_db)):
-    student = await StudentService.update_student(db, student_id, payload)
-    if not student:
-        raise HTTPException(status_code=404, detail="Student record not found")
-    return student
+    return await StudentService.update_student(db, student_id, payload)
+
 
 @v1.delete("/delete-student/{student_id}")
-async def delete_student(student_id: int, db: AsyncSession = Depends(get_db)):
-    success = await StudentService.delete_student(db, student_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Student record not found")
-    return {"message": "Student record deleted successfully"}
+async def delete_student(
+    student_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    await StudentService.delete_student(
+        db,
+        student_id,
+    )
+    return {
+        "message": "Student record deleted successfully"
+    }
