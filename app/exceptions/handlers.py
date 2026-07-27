@@ -3,6 +3,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
+from app.core.logger import app_logger
 from app.exceptions.base import AppException
 
 
@@ -10,6 +11,15 @@ def register_exception_handlers(app: FastAPI):
 
     @app.exception_handler(AppException)
     async def app_exception_handler(request: Request, exc: AppException):
+        app_logger.bind(
+            event="app_exception",
+            path=request.url.path,
+            method=request.method,
+            status_code=exc.status_code,
+            error_code=exc.error_code,
+            exception_type=type(exc).__name__,
+        ).warning(exc.message)
+
         return JSONResponse(
             status_code=exc.status_code,
             content={
@@ -24,6 +34,15 @@ def register_exception_handlers(app: FastAPI):
 
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError):
+        app_logger.bind(
+            event="validation_error",
+            path=request.url.path,
+            method=request.method,
+            status_code=422,
+            exception_type=type(exc).__name__,
+            errors=exc.errors(),
+        ).warning("Request validation failed")
+
         return JSONResponse(
             status_code=422,
             content={
@@ -39,6 +58,14 @@ def register_exception_handlers(app: FastAPI):
 
     @app.exception_handler(IntegrityError)
     async def integrity_handler(request: Request, exc: IntegrityError):
+        app_logger.bind(
+            event="database_constraint",
+            path=request.url.path,
+            method=request.method,
+            status_code=409,
+            exception_type=type(exc).__name__,
+        ).exception("Database constraint violation")
+
         return JSONResponse(
             status_code=409,
             content={
@@ -53,6 +80,14 @@ def register_exception_handlers(app: FastAPI):
 
     @app.exception_handler(SQLAlchemyError)
     async def sqlalchemy_handler(request: Request, exc: SQLAlchemyError):
+        app_logger.bind(
+            event="database_error",
+            path=request.url.path,
+            method=request.method,
+            status_code=500,
+            exception_type=type(exc).__name__,
+        ).exception("Database error")
+
         return JSONResponse(
             status_code=500,
             content={
@@ -67,6 +102,14 @@ def register_exception_handlers(app: FastAPI):
 
     @app.exception_handler(Exception)
     async def global_handler(request: Request, exc: Exception):
+        app_logger.bind(
+            event="unhandled_exception",
+            path=request.url.path,
+            method=request.method,
+            status_code=500,
+            exception_type=type(exc).__name__,
+        ).exception("Unhandled exception")
+
         return JSONResponse(
             status_code=500,
             content={
