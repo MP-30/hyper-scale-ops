@@ -12,7 +12,10 @@ logger.remove()
 
 logger.configure(
     extra={
-        "request_id": "-"
+        "request_id": "-",
+        "service": "hyper-scale-ops",
+        "env": "production",
+        "version": "1.0.0",
     }
 )
 
