@@ -22,6 +22,11 @@ Hyper Scale Ops is a modern full-stack web application (I used jinja2 templates 
 
 This README is written with a recruiter and technical manager audience in mind, highlighting not just what the project does, but how it is built, how it scales in structure, and how it reflects professional software development practices.
 
+<a href="https://github.com/MP-30/hyper-scale-ops-k8s">
+<img src="https://img.shields.io/badge/📊_Hyper_Scale_Ops's-Helm_Repo-F8FAFC?style=for-the-badge&labelColor=0F172A&color=E2E8F0"/>
+</a>
+
+
 ## High-Level Architecture:
 
 ```mermaid
