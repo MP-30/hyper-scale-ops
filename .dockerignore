@@ -162,3 +162,24 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+
+# added later after feedback
+
+.git
+.github
+.idea
+.vscode
+
+tests
+docs
+
+.env
+.env.*
+
+htmlcov
+
+.mypy_cache
+
+logs
+
+README.md
