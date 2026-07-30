@@ -42,6 +42,30 @@ app.include_router(class_router, prefix="/api/v1", tags=["Classes"])
 app.include_router(teacher_router, prefix="/api/v1/teachers", tags=["Teachers"])
 app.include_router(periods_router, prefix="/api/v1/periods", tags=["Periods"]) # Added missing registration
 
+@app.get("/health")
+async def health():
+    return {
+        "status": "healthy"
+    }
+
+@app.get("/db-check")
+async def check_database(db: AsyncSession = Depends(get_db)):
+    await db.execute(text("SELECT 1"))
+
+@app.get("/ready")
+async def ready(db: AsyncSession = Depends(get_db)):
+    try:
+        await db.execute(text("SELECT 1"))
+        return {
+            "status": "READY",
+            "database": "connected"
+        }
+    except Exception:
+        raise HTTPException(
+            status_code=503,
+            detail="Database unavailable"
+        )
+
 @app.get("/healthcheck/{name}")
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
