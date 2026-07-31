@@ -26,8 +26,9 @@ This README is written with a recruiter and technical manager audience in mind, 
 <img src="https://img.shields.io/badge/📊_Hyper_Scale_Ops's-Helm_Repo-F8FAFC?style=for-the-badge&labelColor=0F172A&color=E2E8F0"/>
 </a>
 
-## Test-Server Demo ( digital ocean managed k8s)
-<video src="https://github.com/MP-30/hyper-scale-ops/releases/download/test-demo/test_server_demo.mkv" controls width="100%"></video>
+## 🎥 Test Server Deployment Demo ( Digital Ocean managed K8s)
+
+[▶️ Watch the Test Server Deployment Demo](https://github.com/MP-30/hyper-scale-ops/releases/download/test-demo/test_server_demo.mkv)
 
 ## High-Level Architecture:
 

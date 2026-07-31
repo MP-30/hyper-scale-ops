@@ -2,10 +2,9 @@
 
 
 
-[Watch the video test-server demo](https://github.com/MP-30/hyper-scale-ops/releases/download/test-demo/test_server_demo.mkv)
+## 🎥 Test Server Deployment Demo ( Digital Ocean managed K8s)
 
-<video src="https://github.com/MP-30/hyper-scale-ops/releases/download/test-demo/test_server_demo.mkv" controls width="100%"></video>
-
+[▶️ Watch the Test Server Deployment Demo](https://github.com/MP-30/hyper-scale-ops/releases/download/test-demo/test_server_demo.mkv)
 
 
 ## Kubernetes Cluster
