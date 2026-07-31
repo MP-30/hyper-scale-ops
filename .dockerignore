@@ -183,3 +183,9 @@ htmlcov
 logs
 
 README.md
+
+*.mp4
+*.mkv
+*.webm
+*.mov
+docs/
